@@ -1,0 +1,547 @@
+{
+  "meta": {
+    "title": "Enterprise Transformation Portfolio",
+    "subtitle": "Programme Delivery & Transformation Overview",
+    "programmeStart": "2026-07-01",
+    "programmeEnd": "2028-12-31",
+    "lastUpdated": "2026-09-25",
+    "source": "IT_Transformation_Programme_Portfolio.xlsx – worksheet 'Portfolio Data'",
+    "notes": "transformationAreas, technologyGroups and the optional per-project 'attention' summary are presentation groupings derived from the workbook's Domain, Technology / Platforms and RAG Commentary columns; all other project fields are taken directly from the workbook."
+  },
+  "transformationAreas": [
+    {
+      "area": "Identity & Access",
+      "domains": [
+        "Identity & Access",
+        "Identity & Governance",
+        "Identity & Security",
+        "Infrastructure & Identity"
+      ]
+    },
+    {
+      "area": "Security Operations & Endpoint",
+      "domains": [
+        "Cyber Security",
+        "Endpoint & Workplace"
+      ]
+    },
+    {
+      "area": "Infrastructure, Network & Cloud",
+      "domains": [
+        "Network & Infrastructure",
+        "Network & Security",
+        "Cloud & Security"
+      ]
+    },
+    {
+      "area": "Service Management & Operating Model",
+      "domains": [
+        "IT Service Management",
+        "Operating Model & Process"
+      ]
+    },
+    {
+      "area": "Data, Applications & Business Operations",
+      "domains": [
+        "Data & Analytics",
+        "Business Applications",
+        "Business Operations"
+      ]
+    }
+  ],
+  "technologyGroups": [
+    {
+      "group": "Identity & Access",
+      "terms": [
+        "SailPoint ISC",
+        "SailPoint",
+        "Entra ID",
+        "Entra PIM",
+        "Active Directory",
+        "CyberArk",
+        "PKI"
+      ]
+    },
+    {
+      "group": "Security Operations & Endpoint",
+      "terms": [
+        "SIEM",
+        "SOAR",
+        "SOC tooling",
+        "Microsoft Defender"
+      ]
+    },
+    {
+      "group": "Network & Zero Trust Access",
+      "terms": [
+        "Enterprise Firewalls",
+        "LAN/WAN",
+        "Zscaler ZPA",
+        "Zscaler ZIA"
+      ]
+    },
+    {
+      "group": "Cloud & Infrastructure",
+      "terms": [
+        "Azure",
+        "AWS",
+        "Terraform",
+        "Cloud"
+      ]
+    },
+    {
+      "group": "Service Management & Ways of Working",
+      "terms": [
+        "Jira Service Management",
+        "Jira Assets",
+        "ServiceNow",
+        "Jira"
+      ]
+    },
+    {
+      "group": "Data & Analytics",
+      "terms": [
+        "Snowflake",
+        "SQL",
+        "Power BI"
+      ]
+    },
+    {
+      "group": "Business Applications & Integration",
+      "terms": [
+        "SAP E1",
+        "CRM Platform",
+        "CRM",
+        "REST API",
+        "APIs"
+      ]
+    },
+    {
+      "group": "Workplace & Contact Centre",
+      "terms": [
+        "Microsoft Intune",
+        "Windows",
+        "End User Computing",
+        "CCaaS",
+        "Telephony",
+        "IVR"
+      ]
+    }
+  ],
+  "projects": [
+    {
+      "id": 1,
+      "projectName": "Identity Governance Cloud Transformation",
+      "domain": "Identity & Access",
+      "startDate": "2026-07-01",
+      "endDate": "2027-06-30",
+      "rag": "Green",
+      "scope": "Migrate IGA to a cloud operating model, strengthen identity lifecycle management, integrations, governance and access reviews.",
+      "platforms": [
+        "SailPoint ISC",
+        "Entra ID",
+        "SAP E1",
+        "REST API"
+      ],
+      "technicalKeywords": [
+        "IAM",
+        "IGA",
+        "RBAC",
+        "Joiner-Mover-Leaver",
+        "Access Reviews"
+      ],
+      "frameworks": [
+        "NIS2"
+      ],
+      "ragCommentary": "On track against the current baseline; no material delivery issues reported."
+    },
+    {
+      "id": 2,
+      "projectName": "Privileged Access Management Cloud Transformation",
+      "domain": "Identity & Access",
+      "startDate": "2026-10-01",
+      "endDate": "2027-09-30",
+      "rag": "Green",
+      "scope": "Transform PAM to a cloud operating model, including JIT privileged access, session control and secrets management.",
+      "platforms": [
+        "CyberArk",
+        "Entra ID"
+      ],
+      "technicalKeywords": [
+        "PAM",
+        "JIT",
+        "PIM",
+        "Privileged Sessions",
+        "Secrets Management",
+        "MFA",
+        "Zero Trust"
+      ],
+      "frameworks": [
+        "NIST CSF 2.0"
+      ],
+      "ragCommentary": "On track against the current baseline; no material delivery issues reported."
+    },
+    {
+      "id": 3,
+      "projectName": "Enterprise SIEM & Security Operations Transformation",
+      "domain": "Cyber Security",
+      "startDate": "2026-07-01",
+      "endDate": "2027-12-31",
+      "rag": "Green",
+      "scope": "Phase I: replace the enterprise SIEM. Phase II: introduce security automation, response orchestration and enhanced detection use cases.",
+      "platforms": [
+        "SIEM",
+        "SOAR",
+        "SOC tooling",
+        "APIs"
+      ],
+      "technicalKeywords": [
+        "Log Management",
+        "Detection Engineering",
+        "Security Analytics",
+        "Incident Response",
+        "MITRE ATT&CK"
+      ],
+      "frameworks": [
+        "NIST CSF 2.0"
+      ],
+      "ragCommentary": "On track. Phase I platform replacement and Phase II automation are aligned under a single transformation roadmap."
+    },
+    {
+      "id": 4,
+      "projectName": "Enterprise Directory Transformation – AD to Entra ID, Phase I",
+      "domain": "Infrastructure & Identity",
+      "startDate": "2026-07-01",
+      "endDate": "2027-12-31",
+      "rag": "Amber",
+      "scope": "Deliver Phase I of the transformation from traditional Active Directory towards a cloud identity model and reduce dependency on on-premises directory services.",
+      "platforms": [
+        "Active Directory",
+        "Entra ID",
+        "Entra PIM"
+      ],
+      "technicalKeywords": [
+        "Conditional Access",
+        "MFA",
+        "FIDO2",
+        "Group Policy",
+        "Hybrid Identity",
+        "Zero Trust"
+      ],
+      "frameworks": [
+        "NIS2",
+        "NIST CSF 2.0"
+      ],
+      "ragCommentary": "Legacy application dependencies and hybrid identity complexity are affecting migration sequencing; remediation plan is in progress."
+    },
+    {
+      "id": 5,
+      "projectName": "Global Network Segmentation & Firewall Transformation",
+      "domain": "Network & Infrastructure",
+      "startDate": "2027-01-01",
+      "endDate": "2028-06-30",
+      "rag": "Amber",
+      "scope": "Segment the enterprise network, redesign security zones, rationalise firewall policies and reduce legacy network dependencies.",
+      "platforms": [
+        "Enterprise Firewalls",
+        "LAN/WAN"
+      ],
+      "technicalKeywords": [
+        "Network Segmentation",
+        "VLAN",
+        "SD-WAN",
+        "NAC",
+        "TCP/IP",
+        "Routing",
+        "Firewall Policy",
+        "Zero Trust"
+      ],
+      "frameworks": [
+        "NIST CSF 2.0"
+      ],
+      "ragCommentary": "Firewall rule complexity and site-specific dependencies require additional remediation before full segmentation can be completed."
+    },
+    {
+      "id": 6,
+      "projectName": "IT Service Management Platform Transformation – ServiceNow to Jira SM",
+      "domain": "IT Service Management",
+      "startDate": "2026-07-01",
+      "endDate": "2026-10-31",
+      "rag": "Green",
+      "scope": "Migrate core ITSM capabilities from ServiceNow to Jira Service Management, covering Incident, Request, Change, Knowledge and Service Catalogue.",
+      "platforms": [
+        "Jira Service Management",
+        "Jira Assets",
+        "ServiceNow"
+      ],
+      "technicalKeywords": [
+        "ITIL",
+        "CMDB",
+        "Service Catalogue",
+        "Incident Management",
+        "Change Management",
+        "Knowledge Base",
+        "Automation"
+      ],
+      "frameworks": [
+        "ITIL"
+      ],
+      "ragCommentary": "On track. Core process migration and service catalogue transition remain within the planned four-month delivery window."
+    },
+    {
+      "id": 7,
+      "projectName": "Enterprise Endpoint Protection & EDR Consolidation",
+      "domain": "Endpoint & Workplace",
+      "startDate": "2027-04-01",
+      "endDate": "2027-12-31",
+      "rag": "Green",
+      "scope": "Consolidate endpoint protection and EDR/XDR capabilities, improve hardening standards and retire legacy endpoint agents.",
+      "platforms": [
+        "Microsoft Defender",
+        "Microsoft Intune",
+        "Windows"
+      ],
+      "technicalKeywords": [
+        "EDR",
+        "XDR",
+        "Endpoint Security",
+        "Hardening",
+        "Device Compliance",
+        "Vulnerability Management"
+      ],
+      "frameworks": [
+        "NIST CSF 2.0"
+      ],
+      "ragCommentary": "On track against the current baseline; no material delivery issues reported."
+    },
+    {
+      "id": 8,
+      "projectName": "Cloud Security Posture & Guardrails Implementation",
+      "domain": "Cloud & Security",
+      "startDate": "2027-01-01",
+      "endDate": "2027-12-31",
+      "rag": "Green",
+      "scope": "Implement cloud security baselines, automated guardrails, posture management and compliance monitoring across strategic cloud platforms.",
+      "platforms": [
+        "Azure",
+        "AWS",
+        "Terraform"
+      ],
+      "technicalKeywords": [
+        "CSPM",
+        "CNAPP",
+        "Cloud Security",
+        "Policy as Code",
+        "IAM",
+        "Automated Guardrails"
+      ],
+      "frameworks": [
+        "NIS2",
+        "ISO 27001"
+      ],
+      "ragCommentary": "On track against the current baseline; no material delivery issues reported."
+    },
+    {
+      "id": 9,
+      "projectName": "Enterprise Access Certification & Application Governance",
+      "domain": "Identity & Governance",
+      "startDate": "2027-07-01",
+      "endDate": "2028-06-30",
+      "rag": "Green",
+      "scope": "Standardise application ownership, access certification, role models, segregation-of-duties controls and recurring access reviews.",
+      "platforms": [
+        "SailPoint",
+        "SAP E1"
+      ],
+      "technicalKeywords": [
+        "IAM",
+        "Access Governance",
+        "RBAC",
+        "SoD",
+        "Recertification",
+        "Application Ownership",
+        "Audit"
+      ],
+      "frameworks": [
+        "NIS2",
+        "ISO 27001"
+      ],
+      "ragCommentary": "On track against the current baseline; no material delivery issues reported."
+    },
+    {
+      "id": 10,
+      "projectName": "Zero Trust Access Transformation with Zscaler",
+      "domain": "Network & Security",
+      "startDate": "2027-10-01",
+      "endDate": "2028-06-30",
+      "rag": "Green",
+      "scope": "Transform remote, administrative and third-party access towards identity-aware Zero Trust access and reduce reliance on traditional VPN.",
+      "platforms": [
+        "Zscaler ZPA",
+        "Zscaler ZIA",
+        "Entra ID"
+      ],
+      "technicalKeywords": [
+        "Zero Trust",
+        "VPN Replacement",
+        "Device Posture",
+        "Conditional Access",
+        "MFA",
+        "Third-Party Access"
+      ],
+      "frameworks": [
+        "NIST CSF 2.0"
+      ],
+      "ragCommentary": "On track against the current baseline; no material delivery issues reported."
+    },
+    {
+      "id": 11,
+      "projectName": "Machine Identity & Secrets Management – Discovery and Phase I",
+      "domain": "Identity & Security",
+      "startDate": "2028-01-01",
+      "endDate": "2028-09-30",
+      "rag": "Green",
+      "scope": "Perform enterprise discovery of service accounts, API keys and certificates, followed by Phase I onboarding and automated secrets rotation.",
+      "platforms": [
+        "CyberArk",
+        "PKI"
+      ],
+      "technicalKeywords": [
+        "Service Accounts",
+        "API Keys",
+        "Certificates",
+        "Secrets Management",
+        "Vaulting",
+        "Rotation",
+        "Machine Identity",
+        "Discovery"
+      ],
+      "frameworks": [
+        "NIST CSF 2.0"
+      ],
+      "ragCommentary": "On track. Discovery scope is defined and Phase I onboarding criteria are being prepared."
+    },
+    {
+      "id": 12,
+      "projectName": "Global IT Operating Model & Process Transformation",
+      "domain": "Operating Model & Process",
+      "startDate": "2027-01-01",
+      "endDate": "2027-12-31",
+      "rag": "Green",
+      "scope": "Standardise global IT processes, ownership, governance, RACI, KPI, escalation models and the global/local operating model.",
+      "platforms": [
+        "Jira",
+        "Jira Service Management"
+      ],
+      "technicalKeywords": [
+        "ITIL",
+        "Operating Model",
+        "RACI",
+        "Process Design",
+        "Governance",
+        "KPI",
+        "SLA",
+        "Continual Improvement"
+      ],
+      "frameworks": [
+        "ITIL"
+      ],
+      "ragCommentary": "On track. Target operating model and process ownership principles are progressing to plan."
+    },
+    {
+      "id": 13,
+      "projectName": "Enterprise Data & Analytics Platform Transformation",
+      "domain": "Data & Analytics",
+      "startDate": "2028-01-01",
+      "endDate": "2028-12-31",
+      "rag": "Green",
+      "scope": "Modernise the enterprise data platform, standardise data models, consolidate reporting and migrate legacy analytics to a modern architecture.",
+      "platforms": [
+        "Snowflake",
+        "SQL",
+        "Power BI",
+        "SAP E1",
+        "REST API"
+      ],
+      "technicalKeywords": [
+        "ETL/ELT",
+        "Semantic Layer",
+        "Data Catalogue",
+        "Data Governance",
+        "Reporting",
+        "Analytics"
+      ],
+      "frameworks": [
+        "Data Governance",
+        "ISO 27001"
+      ],
+      "ragCommentary": "On track. Target data architecture and migration waves are aligned with the planned 2028 transformation roadmap."
+    },
+    {
+      "id": 14,
+      "projectName": "Global CRM & Customer Experience Platform Transformation",
+      "domain": "Business Applications",
+      "startDate": "2027-04-01",
+      "endDate": "2028-12-31",
+      "rag": "Amber",
+      "scope": "Transform the CRM and customer experience platform, integrate customer data, modernise the frontend and deliver a phased market rollout.",
+      "platforms": [
+        "CRM Platform",
+        "SAP E1",
+        "REST API",
+        "Cloud"
+      ],
+      "technicalKeywords": [
+        "Customer Experience",
+        "Data Integration",
+        "Frontend",
+        "UX",
+        "Customer Data",
+        "Market Rollout"
+      ],
+      "frameworks": [
+        "Data Privacy",
+        "ISO 27001"
+      ],
+      "ragCommentary": "CRM integration complexity and market rollout dependencies are under active review; delivery remains recoverable within the programme window."
+    },
+    {
+      "id": 15,
+      "projectName": "New Call Centre Onboarding & Operational Readiness",
+      "domain": "Business Operations",
+      "startDate": "2026-09-01",
+      "endDate": "2027-04-30",
+      "rag": "Red",
+      "scope": "Onboard a new call centre, covering office readiness, IT infrastructure, telephony/contact-centre capabilities, workplaces, CRM access, training and cutover.",
+      "platforms": [
+        "CCaaS",
+        "Telephony",
+        "IVR",
+        "CRM",
+        "LAN/WAN",
+        "End User Computing"
+      ],
+      "technicalKeywords": [
+        "Contact Centre",
+        "Workforce Management",
+        "Vendor Management",
+        "Business Readiness",
+        "Cutover",
+        "Operational Readiness"
+      ],
+      "frameworks": [
+        "Business Continuity",
+        "IT Service Continuity"
+      ],
+      "ragCommentary": "Vendor delay in office fit-out and preparation of the call centre premises is impacting infrastructure installation, workplace readiness and planned onboarding dates.",
+      "attention": {
+        "issueType": "Business / vendor dependency",
+        "impactAreas": [
+          "Infrastructure installation",
+          "Workplace readiness",
+          "Planned onboarding dates"
+        ]
+      }
+    }
+  ]
+}
