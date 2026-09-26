@@ -1,23 +1,36 @@
 /* ==========================================================================
    Enterprise Transformation Portfolio – application logic
-   Data:         data/projects.json (loaded at runtime, never embedded here)
+   Data:         data/projects.json, data/portfolio-status.json (loaded at runtime)
    Logic:        date maths, statistics, filtering
    Presentation: one render function per dashboard section
    ========================================================================== */
 (function () {
   'use strict';
 
-  const DATA_URL = 'data/projects.json';
+  const DATA_URL = './data/projects.json';
+  const STATUS_URL = './data/portfolio-status.json';
   const RAG_ORDER = ['Red', 'Amber', 'Green'];
   const RAG_LABEL = { Green: 'On track', Amber: 'Attention required', Red: 'Critical' };
   const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   const MONTHS_LONG = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
   const VISIBLE_TAGS = 3;
+  const MILESTONE_HORIZON_DAYS = 90;
+
+  /** Programme Status Summary columns: JSON key, title, CSS modifier, icon path */
+  const STATUS_COLUMNS = [
+    { key: 'highlights', title: 'Highlights', cls: 'highlights', icon: 'M5 12l4 4L19 6' },
+    { key: 'lowlights', title: 'Lowlights', cls: 'lowlights', icon: 'M12 5v9M12 18.5v.5' },
+    { key: 'risksIssues', title: 'Risks / Issues', cls: 'risks', icon: 'M12 3l9.5 17h-19zM12 10v4M12 17v.5' },
+    { key: 'nextSteps', title: 'Next Steps', cls: 'next', icon: 'M5 12h13M13 6l6 6-6 6' },
+    { key: 'decisionsNeeded', title: 'Decisions Needed', cls: 'decisions', icon: 'M9 11l3 3 8-8M20 12v7H4V5h11' }
+  ];
 
   /** Application state */
   const state = {
     data: null,
+    status: null,
     projects: [],
+    areaIndex: {},
     filters: { search: '', rag: '', domain: '', year: '', platform: '', framework: '' },
     sort: { key: 'id', dir: 1 },
     today: todayUTC(),
@@ -62,23 +75,32 @@
   const ragKey = rag => rag.toLowerCase();
   const ragPill = rag => `<span class="rag-pill ${ragKey(rag)}"><i class="dot rag-${ragKey(rag)}"></i>${esc(rag)}</span>`;
   const uniqueSorted = arr => [...new Set(arr)].sort((a, b) => a.localeCompare(b));
+  const domainChip = p => `<span class="domain-chip area-${p._areaIdx}" title="${esc(p._area)}">${esc(p.domain)}</span>`;
+  const shortName = name => name.split(/ – | with /)[0];
 
   /* ------------------------------------------------------------------
      Data loading & normalisation
      ------------------------------------------------------------------ */
-  async function loadData() {
-    const res = await fetch(DATA_URL, { cache: 'no-cache' });
-    if (!res.ok) throw new Error(`HTTP ${res.status} loading ${DATA_URL}`);
+  async function loadJSON(url) {
+    const res = await fetch(url, { cache: 'no-cache' });
+    if (!res.ok) throw new Error(`HTTP ${res.status} loading ${url}`);
     return res.json();
   }
 
-  /** Adds computed fields (UTC ms dates, duration, years, area) without altering source values. */
+  /** Adds computed fields (UTC ms dates, duration, years, area, milestones) without altering source values. */
   function normalise(data) {
     const areaByDomain = {};
-    (data.transformationAreas || []).forEach(a => a.domains.forEach(d => { areaByDomain[d] = a.area; }));
+    (data.transformationAreas || []).forEach((a, i) => {
+      state.areaIndex[a.area] = i + 1;
+      a.domains.forEach(d => { areaByDomain[d] = a.area; });
+    });
     return data.projects.map(p => {
       const start = parseISO(p.startDate);
       const end = parseISO(p.endDate);
+      const area = areaByDomain[p.domain] || 'Other';
+      const milestones = (p.milestones || [])
+        .map(m => Object.assign({}, m, { _date: parseISO(m.date) }))
+        .sort((a, b) => a._date - b._date);
       return Object.assign({}, p, {
         _start: start,
         _end: end,
@@ -86,8 +108,11 @@
         _months: durationMonths(start, end),
         _years: yearsSpanned(start, end),
         _timing: `${fmtMonthYear(start)} – ${fmtMonthYear(end)}`,
-        _area: areaByDomain[p.domain] || 'Other',
-        _haystack: [p.projectName, p.domain, p.scope, p.ragCommentary, ...p.platforms, ...p.technicalKeywords, ...p.frameworks].join(' ').toLowerCase()
+        _area: area,
+        _areaIdx: state.areaIndex[area] || 0,
+        _ms: milestones,
+        _haystack: [p.projectName, p.domain, p.scope, p.ragCommentary, ...p.platforms, ...p.technicalKeywords, ...p.frameworks,
+          ...milestones.map(m => m.name)].join(' ').toLowerCase()
       });
     });
   }
@@ -113,7 +138,9 @@
   function computeStats(list) {
     const t = state.today;
     const horizon = addMonths(t, 6);
+    const msHorizon = t + MILESTONE_HORIZON_DAYS * DAY;
     const count = rag => list.filter(p => p.rag === rag).length;
+    const upcoming = list.flatMap(p => p._ms).filter(m => m._date >= t && m._date <= msHorizon);
     return {
       total: list.length,
       green: count('Green'),
@@ -122,15 +149,11 @@
       active: list.filter(p => p._start <= t && p._end >= t).length,
       startingSoon: list.filter(p => p._start > t && p._start <= horizon).length,
       endingSoon: list.filter(p => p._end >= t && p._end <= horizon).length,
-      horizon
+      msUpcoming: upcoming.length,
+      msAtRisk: upcoming.filter(m => m.status === 'at-risk').length,
+      horizon,
+      msHorizon
     };
-  }
-
-  /** Count items of a list-valued field across projects. */
-  function frequency(list, field) {
-    const m = new Map();
-    list.forEach(p => p[field].forEach(v => m.set(v, (m.get(v) || 0) + 1)));
-    return m;
   }
 
   /* ------------------------------------------------------------------
@@ -206,13 +229,14 @@
     const pct = v => (s.total ? Math.round((v / s.total) * 100) : 0) + '% of shown';
     const horizonTxt = `to ${fmtMonthYear(s.horizon)}`;
     const cards = [
-      { cls: 'neutral', label: 'Total projects', value: s.total, sub: activeFilterCount() ? `of ${state.projects.length} in portfolio` : 'in portfolio' },
+      { cls: 'total', label: 'Total projects', value: s.total, sub: activeFilterCount() ? `of ${state.projects.length} in portfolio` : 'in portfolio' },
       { cls: 'green', rag: 'Green', label: 'Green', value: s.green, sub: `On track · ${pct(s.green)}` },
       { cls: 'amber', rag: 'Amber', label: 'Amber', value: s.amber, sub: `Attention required · ${pct(s.amber)}` },
       { cls: 'red', rag: 'Red', label: 'Red', value: s.red, sub: `Critical · ${pct(s.red)}` },
-      { cls: '', label: 'Active now', value: s.active, sub: `In delivery on ${fmtDate(state.today)}` },
-      { cls: '', label: 'Starting in next 6 months', value: s.startingSoon, sub: horizonTxt },
-      { cls: '', label: 'Ending in next 6 months', value: s.endingSoon, sub: horizonTxt }
+      { cls: 'blue', label: 'Active now', value: s.active, sub: `In delivery on ${fmtDate(state.today)}` },
+      { cls: 'teal', label: 'Starting in next 6 months', value: s.startingSoon, sub: horizonTxt },
+      { cls: 'cyan', label: 'Ending in next 6 months', value: s.endingSoon, sub: horizonTxt },
+      { cls: 'violet', label: `Milestones next ${MILESTONE_HORIZON_DAYS} days`, value: s.msUpcoming, sub: `to ${fmtDate(s.msHorizon)} · ${s.msAtRisk} at risk` }
     ];
     $('#kpis').innerHTML = cards.map(c => {
       const interactive = c.rag ? ` data-rag="${c.rag}" role="button" tabindex="0" aria-pressed="${state.filters.rag === c.rag}" title="Filter to ${c.rag}"` : '';
@@ -226,16 +250,23 @@
   }
 
   /* ------------------------------------------------------------------
-     Presentation: roadmap (Gantt)
-     Bar positions are computed from startDate / endDate against the
-     programme window from meta – nothing is hard-coded.
+     Presentation: roadmap (Gantt + milestones)
+     Bar and milestone positions are computed from dates against the
+     programme window in meta – nothing is hard-coded.
      ------------------------------------------------------------------ */
-  function renderRoadmap(list) {
+  function programmeWindow() {
     const m = state.data.meta;
     const t0 = parseISO(m.programmeStart);
     const t1 = parseISO(m.programmeEnd) + DAY;
-    const span = t1 - t0;
-    const pos = ms => ((Math.min(Math.max(ms, t0), t1) - t0) / span) * 100;
+    return { t0, t1, pos: ms => ((Math.min(Math.max(ms, t0), t1) - t0) / (t1 - t0)) * 100 };
+  }
+
+  function milestoneClasses(p, m) {
+    return [m.type === 'go-live' ? 'go-live' : '', m.status === 'at-risk' ? `at-risk ${ragKey(p.rag)}` : ''].join(' ').trim();
+  }
+
+  function renderRoadmap(list) {
+    const { t0, t1, pos } = programmeWindow();
 
     // Quarter and year segments across the window
     const quarters = [];
@@ -266,15 +297,17 @@
     const rows = [...list].sort((a, b) => a._start - b._start || a._end - b._end || a.id - b.id).map(p => {
       const left = pos(p._start);
       const width = Math.max(pos(p._endExcl) - left, 0.6);
-      const label = width > 11 ? `<span class="rm-bar-text">${esc(p._timing)}</span>` : '';
-      const tip = `${p.projectName}\n${p._timing} (${p._months} months)\nRAG: ${p.rag} – ${RAG_LABEL[p.rag]}`;
-      return `<div class="rm-row" role="row" tabindex="0" data-id="${p.id}" aria-label="${esc(`${p.projectName}, ${p._timing}, ${p.rag}`)}">
+      const markers = p._ms.map((m, i) =>
+        `<button type="button" class="ms ${milestoneClasses(p, m)}" style="left:${pos(m._date)}%" data-tip="ms" data-pid="${p.id}" data-mi="${i}"
+           aria-label="${esc(`Milestone: ${m.name}, ${fmtDate(m._date)}`)}"></button>`).join('');
+      return `<div class="rm-row${p.rag === 'Red' ? ' is-red' : ''}" role="row" tabindex="0" data-id="${p.id}" aria-label="${esc(`${p.projectName}, ${p._timing}, ${p.rag}`)}">
           <div class="rm-label" role="cell">
-            <i class="dot rag-${ragKey(p.rag)}" aria-hidden="true"></i>
-            <span class="rm-text"><span class="rm-name" title="${esc(p.projectName)}">${esc(p.projectName)}</span><span class="rm-domain">${esc(p.domain)}</span></span>
+            <i class="dot rag-${ragKey(p.rag)}" title="${esc(`RAG: ${p.rag}`)}"></i>
+            <span class="rm-text"><span class="rm-name">${esc(p.projectName)}</span><span class="rm-meta">${domainChip(p)}<span class="rm-timing">${esc(p._timing)}</span></span></span>
           </div>
           <div class="rm-track" role="cell">${gridlines}${todayLine}
-            <span class="rm-bar ${ragKey(p.rag)}" style="left:${left}%;width:${width}%" title="${esc(tip)}">${label}</span>
+            <span class="rm-bar ${ragKey(p.rag)}" style="left:${left}%;width:${width}%" data-tip="bar" data-pid="${p.id}"></span>
+            ${markers}
           </div>
         </div>`;
     }).join('');
@@ -283,96 +316,39 @@
   }
 
   /* ------------------------------------------------------------------
-     Presentation: Portfolio Attention Required (Red + Amber)
+     Presentation: Programme Status Summary
+     Items follow the filters through their projectIds; items with no
+     projectIds are programme-wide and always shown.
      ------------------------------------------------------------------ */
-  function renderAttention(list) {
-    const items = list.filter(p => p.rag === 'Red' || p.rag === 'Amber')
-      .sort((a, b) => RAG_ORDER.indexOf(a.rag) - RAG_ORDER.indexOf(b.rag) || a._start - b._start);
-    if (!items.length) {
-      const hidden = state.projects.some(p => p.rag !== 'Green') ? ' in the current filter selection' : '';
-      $('#attention').innerHTML = `<p class="empty">No Red or Amber projects${hidden}.</p>`;
+  function renderStatus(list) {
+    const el = $('#status');
+    if (!state.status) {
+      el.innerHTML = '<p class="empty">Programme status data (data/portfolio-status.json) could not be loaded.</p>';
       return;
     }
-    $('#attention').innerHTML = items.map(p => {
-      const a = p.attention || {};
-      const principal = p.rag === 'Red' ? `<div class="att-principal">Principal programme concern${a.issueType ? ' · ' + esc(a.issueType) : ''}</div>` : '';
-      const impacts = a.impactAreas && a.impactAreas.length
-        ? `<div class="att-impacts" aria-label="Impacted areas">${a.impactAreas.map(i => `<span>${esc(i)}</span>`).join('')}</div>` : '';
-      return `<article class="att-item ${ragKey(p.rag)}" tabindex="0" data-id="${p.id}">
-          ${principal}
-          <div class="att-top">
-            <div><div class="att-title">${esc(p.projectName)}</div>
-              <div class="att-meta">${esc(p.domain)} · ${esc(p._timing)}</div></div>
-            ${ragPill(p.rag)}
-          </div>
-          <p class="att-comment">${esc(p.ragCommentary)}</p>
-          ${impacts}
-        </article>`;
+    $('#status-meta').textContent = `Reporting period: ${state.status.reportingPeriod || '—'}` +
+      (activeFilterCount() ? ' · filtered to shown projects' : '');
+    const shownIds = new Set(list.map(p => p.id));
+    const byId = new Map(state.projects.map(p => [p.id, p]));
+    const visible = item => !item.projectIds || !item.projectIds.length || item.projectIds.some(id => shownIds.has(id));
+
+    el.innerHTML = STATUS_COLUMNS.map(col => {
+      const items = (state.status[col.key] || []).filter(visible);
+      const lis = items.map(item => {
+        const tag = item.type ? `<span class="si-tag ${ragKey(item.rag || 'Amber')}">${esc(item.type)}</span>` : '';
+        const links = (item.projectIds || []).map(id => byId.get(id)).filter(Boolean)
+          .map(p => `<button type="button" class="si-link" data-open="${p.id}" title="${esc(p.projectName)}">${esc(shortName(p.projectName))}</button>`).join('');
+        return `<li class="status-item${item.rag === 'Red' ? ' is-red' : ''}">
+            <span class="si-text">${tag}${esc(item.text)}</span>
+            ${links ? `<span class="si-links">${links}</span>` : ''}
+          </li>`;
+      }).join('');
+      return `<div class="status-col ${col.cls}">
+          <h3><span class="st-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="13" height="13"><path d="${col.icon}" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            ${esc(col.title)}<span class="st-count">${items.length}</span></h3>
+          ${items.length ? `<ul class="status-list">${lis}</ul>` : '<p class="status-empty">Nothing for the current selection.</p>'}
+        </div>`;
     }).join('');
-  }
-
-  /* ------------------------------------------------------------------
-     Presentation: composition (stacked by RAG) & framework alignment
-     ------------------------------------------------------------------ */
-  function barRow(label, total, max, segments, filterAttr) {
-    const segs = segments.filter(s => s.n > 0)
-      .map(s => `<span class="bar-seg ${s.cls}" style="width:${(s.n / max) * 100}%" title="${esc(`${label}: ${s.n} ${s.title}`)}"></span>`).join('');
-    return `<div class="bar-row"${filterAttr || ''}>
-        <span class="bar-label" title="${esc(label)}">${esc(label)}</span>
-        <span class="bar-track">${segs}</span>
-        <span class="bar-value">${total}</span>
-      </div>`;
-  }
-
-  function renderComposition(list) {
-    const areas = (state.data.transformationAreas || []).map(a => a.area);
-    const max = Math.max(1, ...areas.map(a => list.filter(p => p._area === a).length));
-    $('#composition').innerHTML = areas.map(a => {
-      const ps = list.filter(p => p._area === a);
-      const segs = ['Green', 'Amber', 'Red'].map(r => ({ cls: ragKey(r), n: ps.filter(p => p.rag === r).length, title: r }));
-      return barRow(a, ps.length, max, segs);
-    }).join('');
-  }
-
-  function renderFrameworks(list) {
-    const all = uniqueSorted(state.projects.flatMap(p => p.frameworks));
-    const freq = frequency(list, 'frameworks');
-    const max = Math.max(1, ...freq.values());
-    const rows = all.map(f => ({ f, n: freq.get(f) || 0 })).sort((a, b) => b.n - a.n || a.f.localeCompare(b.f));
-    $('#frameworks').innerHTML = rows.map(r =>
-      barRow(r.f, r.n, max, [{ cls: 'neutral', n: r.n, title: 'projects' }],
-        ` data-filter="framework" data-value="${esc(r.f)}" role="button" tabindex="0" title="Filter to ${esc(r.f)}"`)
-    ).join('');
-  }
-
-  /* ------------------------------------------------------------------
-     Presentation: technology landscape
-     ------------------------------------------------------------------ */
-  function renderTech(list) {
-    const freq = frequency(list, 'platforms');
-    const groups = (state.data.technologyGroups || []).map(g => {
-      const terms = g.terms.map(t => ({ t, n: freq.get(t) || 0 })).sort((a, b) => b.n - a.n || a.t.localeCompare(b.t));
-      const projectsInGroup = list.filter(p => p.platforms.some(x => g.terms.includes(x))).length;
-      return { name: g.group, terms, projectsInGroup };
-    });
-    const tag = ({ t, n }) => {
-      const sel = state.filters.platform === t ? ' selected' : '';
-      const dim = n === 0 ? ' dim' : '';
-      return `<button type="button" class="tag${sel}${dim}" data-filter="platform" data-value="${esc(t)}" title="${esc(`${t}: ${n} project${n === 1 ? '' : 's'} – click to filter`)}">${esc(t)} <span class="count">${n}</span></button>`;
-    };
-    const groupHtml = groups.map(g => `<div class="tech-group">
-        <h3>${esc(g.name)} <span>${g.projectsInGroup} proj.</span></h3>
-        <div class="tech-tags">${g.terms.map(tag).join('')}</div>
-      </div>`).join('');
-
-    // Recurring technical keywords (appear in 2+ of the shown projects)
-    const kw = [...frequency(list, 'technicalKeywords')].filter(([, n]) => n >= 2)
-      .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
-    const kwHtml = `<div class="tech-group" style="grid-column:1/-1">
-        <h3>Recurring technical themes <span>keywords in 2+ shown projects</span></h3>
-        <div class="tech-tags">${kw.length ? kw.map(([k, n]) => `<button type="button" class="tag kw" data-search="${esc(k)}" title="Search for ${esc(k)}">${esc(k)} <span class="count">${n}</span></button>`).join('') : '<span class="empty">None in the current selection.</span>'}</div>
-      </div>`;
-    $('#tech').innerHTML = groupHtml + kwHtml;
   }
 
   /* ------------------------------------------------------------------
@@ -397,12 +373,12 @@
     document.querySelectorAll('#ptable th[data-sort]').forEach(th => {
       th.setAttribute('aria-sort', th.dataset.sort === key ? (dir > 0 ? 'ascending' : 'descending') : 'none');
     });
-    $('#ptable tbody').innerHTML = rows.length ? rows.map(p => `<tr tabindex="0" data-id="${p.id}">
+    $('#ptable tbody').innerHTML = rows.length ? rows.map(p => `<tr tabindex="0" data-id="${p.id}" class="is-${ragKey(p.rag)}">
         <td class="c-id">${p.id}</td>
         <td class="c-name">${esc(p.projectName)}</td>
-        <td class="c-domain">${esc(p.domain)}</td>
+        <td class="c-domain">${domainChip(p)}</td>
         <td>${ragPill(p.rag)}</td>
-        <td class="c-timing">${esc(p._timing)}<small>${p._months} months</small></td>
+        <td class="c-timing">${esc(p._timing)}<small>${p._months} months · ${p._ms.length} milestones</small></td>
         <td class="c-scope">${esc(p.scope)}</td>
         <td class="c-tags">${tagList(p.platforms)}</td>
         <td class="c-tags">${tagList(p.technicalKeywords, 'kw')}</td>
@@ -410,50 +386,164 @@
   }
 
   /* ------------------------------------------------------------------
-     Presentation: project detail drawer
+     Presentation: project detail drawer (project status report)
+     Order: Scope → Schedule & Key Milestones → Technology → Keywords →
+            Framework Alignment → RAG Commentary
      ------------------------------------------------------------------ */
+  function scheduleSection(p) {
+    const span = p._endExcl - p._start;
+    const rel = ms => ((ms - p._start) / span) * 100;
+    const markers = p._ms.map((m, i) =>
+      `<span class="ms ${milestoneClasses(p, m)}" style="left:${rel(m._date)}%" tabindex="0" data-tip="ms" data-pid="${p.id}" data-mi="${i}"
+         aria-label="${esc(`${m.name}, ${fmtDate(m._date)}`)}"></span>`).join('');
+    const items = p._ms.map(m => {
+      const badges = (m.type === 'go-live' ? '<span class="ms-badge golive">Go-live</span>' : '') +
+        (m.status === 'at-risk' ? `<span class="ms-badge risk ${ragKey(p.rag)}">At risk</span>` : '');
+      return `<li class="ms-item ${milestoneClasses(p, m)}">
+          <div class="ms-date">${fmtDate(m._date)}</div>
+          <div class="ms-name">${esc(m.name)}${badges}</div>
+          <div class="ms-desc">${esc(m.description)}</div>
+        </li>`;
+    }).join('');
+    return `<div class="d-section d-schedule"><h3>Schedule &amp; key milestones</h3>
+        <dl class="d-facts">
+          <div class="d-fact"><dt>Start date</dt><dd>${fmtDate(p._start)}</dd></div>
+          <div class="d-fact"><dt>End date</dt><dd>${fmtDate(p._end)}</dd></div>
+          <div class="d-fact"><dt>Duration</dt><dd>${p._months} months</dd></div>
+        </dl>
+        <div class="d-window"><span class="d-window-track"></span><span class="d-window-bar" style="left:0;width:100%"></span>${markers}</div>
+        <div class="d-window-scale"><span>${fmtMonthYear(p._start)}</span><span>${fmtMonthYear(p._end)}</span></div>
+        ${items ? `<ol class="ms-list">${items}</ol>` : '<p>No milestones defined.</p>'}
+      </div>`;
+  }
+
   function openDetail(id) {
     const p = state.projects.find(x => x.id === Number(id));
     if (!p) return;
-    const m = state.data.meta;
-    const t0 = parseISO(m.programmeStart), t1 = parseISO(m.programmeEnd) + DAY;
-    const left = ((p._start - t0) / (t1 - t0)) * 100;
-    const width = ((p._endExcl - p._start) / (t1 - t0)) * 100;
+    hideTip();
     const tags = (arr, cls = '') => `<div class="tech-tags">${arr.map(v => `<span class="tag ${cls}">${esc(v)}</span>`).join('')}</div>`;
+    const drawer = $('#drawer');
+    drawer.style.setProperty('--d-rag', `var(--rag-${ragKey(p.rag)})`);
+    drawer.style.setProperty('--d-rag-soft', `var(--rag-${ragKey(p.rag)}-soft)`);
 
-    $('#d-kicker').innerHTML = `Project ${p.id} · ${esc(p.domain)} · ${ragPill(p.rag)}`;
+    $('#d-kicker').innerHTML = `Project ${p.id} · ${domainChip(p)} · ${ragPill(p.rag)}`;
     $('#d-title').textContent = p.projectName;
     $('#d-body').innerHTML = `
-      <dl class="d-facts">
-        <div class="d-fact"><dt>Start date</dt><dd>${fmtDate(p._start)}</dd></div>
-        <div class="d-fact"><dt>End date</dt><dd>${fmtDate(p._end)}</dd></div>
-        <div class="d-fact"><dt>Duration</dt><dd>${p._months} months</dd></div>
-        <div class="d-fact"><dt>RAG</dt><dd>${esc(p.rag)} – ${RAG_LABEL[p.rag]}</dd></div>
-        <div class="d-fact" style="grid-column:span 2"><dt>Domain</dt><dd>${esc(p.domain)}</dd></div>
-      </dl>
-      <div class="d-section">
-        <h3>Position in programme window</h3>
-        <div class="d-mini" aria-hidden="true"><i class="rag-${ragKey(p.rag)}" style="left:${left}%;width:${width}%"></i></div>
-        <div class="d-mini-scale"><span>${fmtMonthYear(t0)}</span><span>${fmtMonthYear(parseISO(m.programmeEnd))}</span></div>
-      </div>
-      <div class="d-section"><h3>RAG commentary</h3><p class="d-commentary ${ragKey(p.rag)}">${esc(p.ragCommentary)}</p></div>
-      <div class="d-section"><h3>Scope</h3><p>${esc(p.scope)}</p></div>
-      <div class="d-section"><h3>Technology / platforms</h3>${tags(p.platforms)}</div>
-      <div class="d-section"><h3>Technical keywords</h3>${tags(p.technicalKeywords, 'kw')}</div>
-      <div class="d-section"><h3>Relevant frameworks</h3>${tags(p.frameworks)}
-        <p style="margin-top:6px;font-size:11px;color:var(--ink-3)">Framework alignment only; does not imply certification.</p></div>`;
+      <div class="d-section d-scope"><h3>Scope</h3><p>${esc(p.scope)}</p></div>
+      ${scheduleSection(p)}
+      <div class="d-section d-tech"><h3>Technology / platforms</h3>${tags(p.platforms)}</div>
+      <div class="d-section d-kw"><h3>Technical keywords</h3>${tags(p.technicalKeywords, 'kw')}</div>
+      <div class="d-section d-fw"><h3>Framework alignment</h3>${tags(p.frameworks, 'fw')}
+        <p class="fw-note">Relevant frameworks only; does not imply certification.</p></div>
+      <div class="d-section d-status"><h3>Status · RAG commentary</h3>
+        <p class="d-commentary">${ragPill(p.rag)} &nbsp;${esc(p.ragCommentary)}</p></div>`;
 
     state.lastFocus = document.activeElement;
-    $('#drawer').hidden = false;
+    drawer.hidden = false;
     $('#drawer-backdrop').hidden = false;
+    $('#d-body').scrollTop = 0;
     $('#d-close').focus();
   }
 
   function closeDetail() {
     if ($('#drawer').hidden) return;
+    hideTip();
     $('#drawer').hidden = true;
     $('#drawer-backdrop').hidden = true;
     if (state.lastFocus && document.contains(state.lastFocus)) state.lastFocus.focus();
+  }
+
+  /* ------------------------------------------------------------------
+     Tooltip (one fixed-position element, clamped to the viewport)
+     ------------------------------------------------------------------ */
+  function tipContent(el) {
+    const p = state.projects.find(x => x.id === Number(el.dataset.pid));
+    if (!p) return '';
+    if (el.dataset.tip === 'ms') {
+      const m = p._ms[Number(el.dataset.mi)];
+      if (!m) return '';
+      const tag = m.status === 'at-risk' ? `<div class="tt-tag ${ragKey(p.rag)}">At risk</div>` : '';
+      return `<div class="tt-project">${esc(shortName(p.projectName))}</div>
+        <div class="tt-title">${esc(m.name)}</div>
+        <div class="tt-date">${fmtDate(m._date)}${m.type === 'go-live' ? ' · Go-live' : ''}</div>
+        <div class="tt-desc">${esc(m.description)}</div>${tag}`;
+    }
+    return `<div class="tt-title">${esc(p.projectName)}</div>
+      <div class="tt-date">${esc(p._timing)} · ${p._months} months</div>
+      <div class="tt-desc">RAG: ${esc(p.rag)} – ${RAG_LABEL[p.rag]} · ${p._ms.length} milestones</div>`;
+  }
+
+  function showTip(el) {
+    const html = tipContent(el);
+    if (!html) return;
+    const tip = $('#tooltip');
+    tip.innerHTML = html;
+    tip.hidden = false;
+    tip.classList.remove('show');
+    const r = el.getBoundingClientRect();
+    const tw = tip.offsetWidth, th = tip.offsetHeight, gap = 10, pad = 8;
+    let top = r.top - th - gap;
+    if (top < pad) top = r.bottom + gap;
+    top = Math.min(top, window.innerHeight - th - pad);
+    const cx = el.dataset.tip === 'bar' ? Math.min(Math.max(lastPointerX, r.left), r.right) : r.left + r.width / 2;
+    const left = Math.min(Math.max(cx - tw / 2, pad), window.innerWidth - tw - pad);
+    tip.style.top = `${Math.max(top, pad)}px`;
+    tip.style.left = `${left}px`;
+    cancelAnimationFrame(tipFrame);
+    tipFrame = requestAnimationFrame(() => tip.classList.add('show'));
+  }
+  function hideTip() {
+    const tip = $('#tooltip');
+    cancelAnimationFrame(tipFrame);
+    tip.classList.remove('show');
+    tip.hidden = true;
+  }
+  let lastPointerX = 0;
+  let tipFrame = 0;
+
+  function initTooltips() {
+    document.addEventListener('mousemove', e => { lastPointerX = e.clientX; }, { passive: true });
+    document.addEventListener('mouseover', e => {
+      const el = e.target.closest('[data-tip]');
+      if (el) showTip(el);
+    });
+    document.addEventListener('mouseout', e => {
+      const el = e.target.closest('[data-tip]');
+      if (el && !el.contains(e.relatedTarget)) hideTip();
+    });
+    document.addEventListener('focusin', e => {
+      const el = e.target.closest('[data-tip]');
+      if (el) showTip(el); else hideTip();
+    });
+    document.addEventListener('focusout', e => { if (e.target.closest('[data-tip]')) hideTip(); });
+    window.addEventListener('scroll', hideTip, { passive: true, capture: true });
+    window.addEventListener('resize', hideTip);
+  }
+
+  /* ------------------------------------------------------------------
+     Theme (light / dark) – stored in localStorage, OS preference as default
+     ------------------------------------------------------------------ */
+  function syncThemeToggle() {
+    const dark = document.documentElement.dataset.theme === 'dark';
+    const btn = $('#btn-theme');
+    btn.setAttribute('aria-pressed', String(dark));
+    btn.title = dark ? 'Switch to light mode' : 'Switch to dark mode';
+  }
+  function toggleTheme() {
+    const root = document.documentElement;
+    root.classList.add('theme-transition');
+    root.dataset.theme = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    try { localStorage.setItem('etp-theme', root.dataset.theme); } catch (err) { /* storage unavailable */ }
+    syncThemeToggle();
+    setTimeout(() => root.classList.remove('theme-transition'), 350);
+  }
+  function initTheme() {
+    const root = document.documentElement;
+    if (!root.dataset.theme) {
+      root.dataset.theme = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    }
+    syncThemeToggle();
+    $('#btn-theme').addEventListener('click', toggleTheme);
   }
 
   /* ------------------------------------------------------------------
@@ -461,13 +551,11 @@
      ------------------------------------------------------------------ */
   function renderAll() {
     const list = filtered();
+    hideTip();
     renderFilterStatus(list);
     renderKPIs(list);
     renderRoadmap(list);
-    renderAttention(list);
-    renderComposition(list);
-    renderFrameworks(list);
-    renderTech(list);
+    renderStatus(list);
     renderTable(list);
   }
 
@@ -487,11 +575,8 @@
     const kpi = t.closest('.kpi[data-rag]');
     if (kpi) { setFilter('rag', state.filters.rag === kpi.dataset.rag ? '' : kpi.dataset.rag); return true; }
 
-    const f = t.closest('[data-filter]');
-    if (f) { const k = f.dataset.filter; setFilter(k, state.filters[k] === f.dataset.value ? '' : f.dataset.value); return true; }
-
-    const s = t.closest('[data-search]');
-    if (s) { const v = state.filters.search === s.dataset.search ? '' : s.dataset.search; $('#f-search').value = v; setFilter('search', v); return true; }
+    const link = t.closest('[data-open]');
+    if (link) { openDetail(link.dataset.open); return true; }
 
     const sortTh = t.closest('th[data-sort]');
     if (sortTh) {
@@ -514,32 +599,24 @@
     });
     $('#d-close').addEventListener('click', closeDetail);
     $('#drawer-backdrop').addEventListener('click', closeDetail);
-    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDetail(); });
-
-    $('#btn-theme').addEventListener('click', () => {
-      const root = document.documentElement;
-      const next = root.dataset.theme === 'dark' ? 'light' : 'dark';
-      root.dataset.theme = next;
-      try { localStorage.setItem('etp-theme', next); } catch (err) { /* storage unavailable */ }
-    });
-  }
-
-  function initTheme() {
-    const root = document.documentElement;
-    if (!root.dataset.theme) {
-      root.dataset.theme = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-    }
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') { hideTip(); closeDetail(); } });
   }
 
   async function init() {
     initTheme();
+    initTooltips();
+    let status;
     try {
-      state.data = await loadData();
+      [state.data, status] = await Promise.all([
+        loadJSON(DATA_URL),
+        loadJSON(STATUS_URL).catch(err => { console.warn('Programme status not loaded:', err); return null; })
+      ]);
     } catch (err) {
       console.warn('Failed to load portfolio data:', err);
       $('#load-error').hidden = false;
       return;
     }
+    state.status = status;
     state.projects = normalise(state.data);
     renderHeader();
     initFilters();
