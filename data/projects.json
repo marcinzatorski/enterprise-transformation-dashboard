@@ -6,7 +6,7 @@
     "programmeEnd": "2028-12-31",
     "lastUpdated": "2026-09-25",
     "source": "IT_Transformation_Programme_Portfolio.xlsx – worksheet 'Portfolio Data'",
-    "notes": "transformationAreas, technologyGroups and the optional per-project 'attention' summary are presentation groupings derived from the workbook's Domain, Technology / Platforms and RAG Commentary columns; all other project fields are taken directly from the workbook."
+    "notes": "transformationAreas, technologyGroups and the optional per-project 'attention' summary are presentation groupings derived from the workbook's Domain, Technology / Platforms and RAG Commentary columns; all other project fields are taken directly from the workbook. Project milestones and the programme status summary (data/portfolio-status.json) are illustrative demo content aligned to each project's scope, dates and RAG commentary."
   },
   "transformationAreas": [
     {
@@ -153,7 +153,30 @@
       "frameworks": [
         "NIS2"
       ],
-      "ragCommentary": "On track against the current baseline; no material delivery issues reported."
+      "ragCommentary": "On track against the current baseline; no material delivery issues reported.",
+      "milestones": [
+        {
+          "name": "SailPoint ISC Design Approved",
+          "date": "2026-10-15",
+          "type": "gate",
+          "status": "on-track",
+          "description": "Target IGA architecture, Entra ID and SAP E1 integration patterns and migration approach approved by the design authority."
+        },
+        {
+          "name": "Priority Applications Onboarded",
+          "date": "2027-02-26",
+          "type": "delivery",
+          "status": "on-track",
+          "description": "First wave of priority business applications onboarded to SailPoint ISC through REST API connectors, with joiner-mover-leaver flows live."
+        },
+        {
+          "name": "Cloud Migration Complete",
+          "date": "2027-06-18",
+          "type": "go-live",
+          "status": "on-track",
+          "description": "Legacy IGA decommissioned, access reviews running on SailPoint ISC and operational handover to BAU completed."
+        }
+      ]
     },
     {
       "id": 2,
@@ -179,7 +202,30 @@
       "frameworks": [
         "NIST CSF 2.0"
       ],
-      "ragCommentary": "On track against the current baseline; no material delivery issues reported."
+      "ragCommentary": "On track against the current baseline; no material delivery issues reported.",
+      "milestones": [
+        {
+          "name": "CyberArk Cloud Design Approved",
+          "date": "2026-12-11",
+          "type": "gate",
+          "status": "on-track",
+          "description": "CyberArk Privilege Cloud tenancy, vault design and Entra ID integration approved."
+        },
+        {
+          "name": "JIT Access Pilot Complete",
+          "date": "2027-04-30",
+          "type": "delivery",
+          "status": "on-track",
+          "description": "Just-in-time privileged access, MFA and session recording piloted with infrastructure administration teams."
+        },
+        {
+          "name": "Privileged Accounts Migrated",
+          "date": "2027-09-17",
+          "type": "go-live",
+          "status": "on-track",
+          "description": "Tier-0 and tier-1 privileged accounts onboarded, secrets vaulted and the legacy PAM service retired."
+        }
+      ]
     },
     {
       "id": 3,
@@ -205,7 +251,30 @@
       "frameworks": [
         "NIST CSF 2.0"
       ],
-      "ragCommentary": "On track. Phase I platform replacement and Phase II automation are aligned under a single transformation roadmap."
+      "ragCommentary": "On track. Phase I platform replacement and Phase II automation are aligned under a single transformation roadmap.",
+      "milestones": [
+        {
+          "name": "SIEM Platform Design Approved",
+          "date": "2026-11-30",
+          "type": "gate",
+          "status": "on-track",
+          "description": "Target SIEM platform, priority log sources and data retention model approved."
+        },
+        {
+          "name": "Phase I: SIEM Cutover",
+          "date": "2027-05-28",
+          "type": "go-live",
+          "status": "on-track",
+          "description": "Priority log sources onboarded, detections mapped to MITRE ATT&CK and the legacy SIEM switched off."
+        },
+        {
+          "name": "Phase II: SOAR Automation Live",
+          "date": "2027-12-10",
+          "type": "delivery",
+          "status": "on-track",
+          "description": "Automated triage and response playbooks integrated with SOC tooling through APIs."
+        }
+      ]
     },
     {
       "id": 4,
@@ -232,7 +301,30 @@
         "NIS2",
         "NIST CSF 2.0"
       ],
-      "ragCommentary": "Legacy application dependencies and hybrid identity complexity are affecting migration sequencing; remediation plan is in progress."
+      "ragCommentary": "Legacy application dependencies and hybrid identity complexity are affecting migration sequencing; remediation plan is in progress.",
+      "milestones": [
+        {
+          "name": "Hybrid Identity Assessment Complete",
+          "date": "2026-10-30",
+          "type": "gate",
+          "status": "on-track",
+          "description": "Legacy application dependencies on Active Directory and Group Policy catalogued and migration sequence proposed."
+        },
+        {
+          "name": "Conditional Access & FIDO2 Baseline Live",
+          "date": "2027-04-30",
+          "type": "delivery",
+          "status": "on-track",
+          "description": "Conditional Access policies, MFA and FIDO2 enforced in Entra ID for pilot user groups."
+        },
+        {
+          "name": "Phase I Migration Complete",
+          "date": "2027-12-17",
+          "type": "go-live",
+          "status": "at-risk",
+          "description": "Priority workloads authenticating through Entra ID and Entra PIM live for administrative roles. Sequencing affected by legacy application dependencies."
+        }
+      ]
     },
     {
       "id": 5,
@@ -259,7 +351,30 @@
       "frameworks": [
         "NIST CSF 2.0"
       ],
-      "ragCommentary": "Firewall rule complexity and site-specific dependencies require additional remediation before full segmentation can be completed."
+      "ragCommentary": "Firewall rule complexity and site-specific dependencies require additional remediation before full segmentation can be completed.",
+      "milestones": [
+        {
+          "name": "Segmentation Design Approved",
+          "date": "2027-03-31",
+          "type": "gate",
+          "status": "on-track",
+          "description": "Target security zones, VLAN model and firewall policy standards approved."
+        },
+        {
+          "name": "Pilot Sites Segmented",
+          "date": "2027-10-29",
+          "type": "delivery",
+          "status": "on-track",
+          "description": "Segmentation and NAC deployed at pilot sites, with the firewall rulebase rationalised for the pilot scope."
+        },
+        {
+          "name": "Global Segmentation Complete",
+          "date": "2028-06-16",
+          "type": "go-live",
+          "status": "at-risk",
+          "description": "All in-scope sites segmented, SD-WAN routing aligned and legacy firewall rules retired. Depends on remediation of rule complexity and site-specific dependencies."
+        }
+      ]
     },
     {
       "id": 6,
@@ -286,7 +401,30 @@
       "frameworks": [
         "ITIL"
       ],
-      "ragCommentary": "On track. Core process migration and service catalogue transition remain within the planned four-month delivery window."
+      "ragCommentary": "On track. Core process migration and service catalogue transition remain within the planned four-month delivery window.",
+      "milestones": [
+        {
+          "name": "Jira SM Configuration Complete",
+          "date": "2026-08-14",
+          "type": "delivery",
+          "status": "on-track",
+          "description": "Incident, Request and Change workflows, Jira Assets CMDB model and service catalogue configured."
+        },
+        {
+          "name": "UAT Signed Off",
+          "date": "2026-10-02",
+          "type": "gate",
+          "status": "on-track",
+          "description": "Process owners sign off user acceptance testing and the ServiceNow data migration rehearsal."
+        },
+        {
+          "name": "ServiceNow to Jira SM Cutover",
+          "date": "2026-10-30",
+          "type": "go-live",
+          "status": "on-track",
+          "description": "Go-live on Jira Service Management, with ServiceNow retained read-only for historical records."
+        }
+      ]
     },
     {
       "id": 7,
@@ -312,7 +450,30 @@
       "frameworks": [
         "NIST CSF 2.0"
       ],
-      "ragCommentary": "On track against the current baseline; no material delivery issues reported."
+      "ragCommentary": "On track against the current baseline; no material delivery issues reported.",
+      "milestones": [
+        {
+          "name": "Defender & Intune Baseline Approved",
+          "date": "2027-05-28",
+          "type": "gate",
+          "status": "on-track",
+          "description": "Microsoft Defender for Endpoint policies and Intune hardening baselines approved."
+        },
+        {
+          "name": "Windows Estate Enrolled in Defender XDR",
+          "date": "2027-09-24",
+          "type": "delivery",
+          "status": "on-track",
+          "description": "Majority of the Windows estate onboarded to Defender XDR with device compliance reporting."
+        },
+        {
+          "name": "Legacy Endpoint Agents Retired",
+          "date": "2027-12-10",
+          "type": "go-live",
+          "status": "on-track",
+          "description": "Legacy antivirus and EDR agents removed and vulnerability management integrated into BAU."
+        }
+      ]
     },
     {
       "id": 8,
@@ -339,7 +500,30 @@
         "NIS2",
         "ISO 27001"
       ],
-      "ragCommentary": "On track against the current baseline; no material delivery issues reported."
+      "ragCommentary": "On track against the current baseline; no material delivery issues reported.",
+      "milestones": [
+        {
+          "name": "Cloud Security Baselines Approved",
+          "date": "2027-03-26",
+          "type": "gate",
+          "status": "on-track",
+          "description": "Azure and AWS security baselines mapped to ISO 27001 and NIS2 controls."
+        },
+        {
+          "name": "Policy as Code Guardrails Live",
+          "date": "2027-07-30",
+          "type": "delivery",
+          "status": "on-track",
+          "description": "Terraform-based preventive guardrails deployed to production landing zones."
+        },
+        {
+          "name": "CSPM Monitoring Operational",
+          "date": "2027-12-03",
+          "type": "go-live",
+          "status": "on-track",
+          "description": "Cloud posture management and compliance monitoring handed over to cloud operations."
+        }
+      ]
     },
     {
       "id": 9,
@@ -366,7 +550,30 @@
         "NIS2",
         "ISO 27001"
       ],
-      "ragCommentary": "On track against the current baseline; no material delivery issues reported."
+      "ragCommentary": "On track against the current baseline; no material delivery issues reported.",
+      "milestones": [
+        {
+          "name": "Application Ownership Model Agreed",
+          "date": "2027-09-30",
+          "type": "gate",
+          "status": "on-track",
+          "description": "Named business and technical owners assigned for in-scope applications, including SAP E1."
+        },
+        {
+          "name": "Role Model & SoD Rules Released",
+          "date": "2028-01-28",
+          "type": "delivery",
+          "status": "on-track",
+          "description": "Business roles and segregation-of-duties rules configured in SailPoint."
+        },
+        {
+          "name": "First Enterprise Recertification Complete",
+          "date": "2028-06-09",
+          "type": "go-live",
+          "status": "on-track",
+          "description": "Enterprise-wide access certification campaign completed, with audit evidence retained."
+        }
+      ]
     },
     {
       "id": 10,
@@ -392,7 +599,30 @@
       "frameworks": [
         "NIST CSF 2.0"
       ],
-      "ragCommentary": "On track against the current baseline; no material delivery issues reported."
+      "ragCommentary": "On track against the current baseline; no material delivery issues reported.",
+      "milestones": [
+        {
+          "name": "ZPA / ZIA Architecture Approved",
+          "date": "2027-12-10",
+          "type": "gate",
+          "status": "on-track",
+          "description": "Zscaler ZPA and ZIA design, Entra ID Conditional Access and device posture checks approved."
+        },
+        {
+          "name": "Third-Party Access on ZPA",
+          "date": "2028-03-17",
+          "type": "delivery",
+          "status": "on-track",
+          "description": "Vendor and third-party access moved from VPN to Zscaler ZPA application segments."
+        },
+        {
+          "name": "Legacy VPN Decommissioned",
+          "date": "2028-06-23",
+          "type": "go-live",
+          "status": "on-track",
+          "description": "Remote and administrative access fully on Zscaler and legacy VPN concentrators retired."
+        }
+      ]
     },
     {
       "id": 11,
@@ -419,7 +649,30 @@
       "frameworks": [
         "NIST CSF 2.0"
       ],
-      "ragCommentary": "On track. Discovery scope is defined and Phase I onboarding criteria are being prepared."
+      "ragCommentary": "On track. Discovery scope is defined and Phase I onboarding criteria are being prepared.",
+      "milestones": [
+        {
+          "name": "Machine Identity Discovery Complete",
+          "date": "2028-03-31",
+          "type": "gate",
+          "status": "on-track",
+          "description": "Inventory of service accounts, API keys and certificates across priority platforms completed."
+        },
+        {
+          "name": "Vaulting & PKI Patterns Approved",
+          "date": "2028-06-30",
+          "type": "delivery",
+          "status": "on-track",
+          "description": "CyberArk secrets vaulting and PKI certificate lifecycle patterns approved."
+        },
+        {
+          "name": "Phase I Onboarding & Rotation Live",
+          "date": "2028-09-22",
+          "type": "go-live",
+          "status": "on-track",
+          "description": "Priority machine identities vaulted, with automated secrets rotation enabled."
+        }
+      ]
     },
     {
       "id": 12,
@@ -446,7 +699,30 @@
       "frameworks": [
         "ITIL"
       ],
-      "ragCommentary": "On track. Target operating model and process ownership principles are progressing to plan."
+      "ragCommentary": "On track. Target operating model and process ownership principles are progressing to plan.",
+      "milestones": [
+        {
+          "name": "Target Operating Model Approved",
+          "date": "2027-03-31",
+          "type": "gate",
+          "status": "on-track",
+          "description": "Global/local operating model, RACI and governance forums approved by IT leadership."
+        },
+        {
+          "name": "Core ITIL Processes Redesigned",
+          "date": "2027-07-30",
+          "type": "delivery",
+          "status": "on-track",
+          "description": "Standardised processes, KPIs, SLAs and escalation paths published and configured in Jira Service Management."
+        },
+        {
+          "name": "Operating Model Embedded",
+          "date": "2027-12-17",
+          "type": "go-live",
+          "status": "on-track",
+          "description": "KPI reporting live and the continual improvement cycle handed to process owners."
+        }
+      ]
     },
     {
       "id": 13,
@@ -475,7 +751,30 @@
         "Data Governance",
         "ISO 27001"
       ],
-      "ragCommentary": "On track. Target data architecture and migration waves are aligned with the planned 2028 transformation roadmap."
+      "ragCommentary": "On track. Target data architecture and migration waves are aligned with the planned 2028 transformation roadmap.",
+      "milestones": [
+        {
+          "name": "Snowflake Foundation Ready",
+          "date": "2028-05-15",
+          "type": "delivery",
+          "status": "on-track",
+          "description": "Production Snowflake environment, security model and core data integration framework available."
+        },
+        {
+          "name": "Semantic Layer Released",
+          "date": "2028-09-15",
+          "type": "delivery",
+          "status": "on-track",
+          "description": "Governed semantic layer and data catalogue published, with the first Power BI reports on the new model."
+        },
+        {
+          "name": "Legacy Reporting Migration Complete",
+          "date": "2028-12-15",
+          "type": "go-live",
+          "status": "on-track",
+          "description": "Legacy analytics and SAP E1 reporting migrated and the old reporting platform retired."
+        }
+      ]
     },
     {
       "id": 14,
@@ -503,7 +802,30 @@
         "Data Privacy",
         "ISO 27001"
       ],
-      "ragCommentary": "CRM integration complexity and market rollout dependencies are under active review; delivery remains recoverable within the programme window."
+      "ragCommentary": "CRM integration complexity and market rollout dependencies are under active review; delivery remains recoverable within the programme window.",
+      "milestones": [
+        {
+          "name": "CRM Solution Design Signed Off",
+          "date": "2027-07-30",
+          "type": "gate",
+          "status": "on-track",
+          "description": "Target CRM design, customer data model and SAP E1 / REST API integration approach signed off."
+        },
+        {
+          "name": "Pilot Market Go-Live",
+          "date": "2028-02-25",
+          "type": "go-live",
+          "status": "on-track",
+          "description": "CRM platform and new customer frontend live in the pilot market with integrated customer data."
+        },
+        {
+          "name": "Phased Market Rollout Complete",
+          "date": "2028-11-30",
+          "type": "go-live",
+          "status": "at-risk",
+          "description": "Remaining markets migrated and legacy CRM decommissioned. Depends on resolving integration complexity and market rollout dependencies."
+        }
+      ]
     },
     {
       "id": 15,
@@ -541,7 +863,30 @@
           "Workplace readiness",
           "Planned onboarding dates"
         ]
-      }
+      },
+      "milestones": [
+        {
+          "name": "Office Infrastructure Ready",
+          "date": "2026-12-18",
+          "type": "gate",
+          "status": "at-risk",
+          "description": "Premises fit-out complete, with LAN/WAN and workplace infrastructure installed. Delayed by the vendor's office fit-out."
+        },
+        {
+          "name": "Technology & Telephony Ready",
+          "date": "2027-02-26",
+          "type": "delivery",
+          "status": "at-risk",
+          "description": "CCaaS, telephony/IVR, CRM access and end-user computing installed and tested on site. Dependent on premises readiness."
+        },
+        {
+          "name": "Operational Go-Live",
+          "date": "2027-04-23",
+          "type": "go-live",
+          "status": "at-risk",
+          "description": "Agents trained, cutover complete and the call centre handling live customer contacts. Planned onboarding dates under pressure."
+        }
+      ]
     }
   ]
 }
