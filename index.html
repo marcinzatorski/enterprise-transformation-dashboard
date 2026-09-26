@@ -3,18 +3,12 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
   <title>Enterprise Transformation Portfolio</title>
-  <meta name="description" content="Programme delivery and transformation overview: roadmap and milestones, RAG status, programme status summary and project portfolio.">
+  <meta name="description" content="Interactive enterprise transformation portfolio dashboard showing programme roadmap, delivery status, milestones and project details.">
   <link rel="stylesheet" href="styles.css">
-  <script>
-    /* Apply the stored theme (or the OS preference) before first paint to avoid a flash. */
-    (function () {
-      var t = null;
-      try { t = localStorage.getItem('etp-theme'); } catch (e) {}
-      if (!t) t = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-      document.documentElement.dataset.theme = t;
-    })();
-  </script>
+  <script src="assets/theme-init.js"></script>
 </head>
 <body>
   <header class="app-header">
@@ -81,13 +75,12 @@
           <p class="card-meta">Project timelines and key milestones · hover or focus a marker for detail</p>
         </div>
         <div class="legend" aria-hidden="true">
-          <span><i class="lg-bar"></i>Project duration</span>
-          <span><i class="lg-diamond"></i>Milestone</span>
+          <span><i class="lg-bar green"></i>Green – on track</span>
+          <span><i class="lg-bar amber"></i>Amber – attention required</span>
+          <span><i class="lg-bar red"></i>Red – critical</span>
+          <span><i class="lg-diamond"></i>Milestone (project RAG colour)</span>
           <span><i class="lg-diamond golive"></i>Go-live</span>
           <span><i class="lg-diamond risk"></i>At risk</span>
-          <span><i class="dot rag-green"></i>Green</span>
-          <span><i class="dot rag-amber"></i>Amber</span>
-          <span><i class="dot rag-red"></i>Red</span>
           <span><i class="today-key"></i>Today</span>
         </div>
       </div>
