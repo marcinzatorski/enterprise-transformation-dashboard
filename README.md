@@ -10,8 +10,9 @@ It is a static site: HTML, CSS and vanilla JavaScript, with no build step, backe
 
 - **Filters**: free-text search (including milestone names), RAG, domain, year, technology/platform and framework. Every section updates together, without a page reload. Includes a Reset button.
 - **KPI cards**: total, Green, Amber and Red counts, projects active today, projects starting or ending in the next 6 months, and milestones due in the next 90 days (with the number at risk). All values are calculated from the data. Clicking a RAG card filters by that status.
-- **Portfolio roadmap**: a Gantt-style timeline from Jul 2026 to Dec 2028 with year bands, quarter columns, a "Today" marker, domain labels and RAG indicators.
-  - Each project shows 2–3 milestone diamonds, positioned by date. Go-live and at-risk milestones are highlighted.
+- **Portfolio roadmap**: a Gantt-style timeline from Jul 2026 to Dec 2028 with year bands, quarter columns, a "Today" marker and domain labels.
+  - Each project bar is filled with its RAG colour (green, amber or red) and has a darker border of the same colour.
+  - Each project shows 2–3 milestone diamonds, positioned by date and coloured with the project's RAG status. Go-live milestones are larger and at-risk milestones have a dark ring.
   - Hovering over or focusing a milestone or bar shows a tooltip. It works with the keyboard and in both themes, and stays inside the window.
 - **Programme Status Summary**: Highlights, Lowlights, Risks / Issues, Next Steps and Decisions Needed, loaded from `data/portfolio-status.json`. Items linked to projects follow the filters and open the project detail.
 - **Project portfolio table**: sortable, with domain, RAG, timing, scope, platforms and keywords. Long tag lists collapse behind "+N more".
@@ -24,7 +25,8 @@ It is a static site: HTML, CSS and vanilla JavaScript, with no build step, backe
 - HTML5 (semantic markup, ARIA roles for interactive elements)
 - CSS3 (custom properties for colours, spacing, typography, RAG styles and dark mode)
 - Vanilla JavaScript (ES2017+, `fetch` for data loading)
-- No external libraries, fonts or CDNs
+- No external libraries, fonts, CDNs, analytics or third-party requests
+- Content Security Policy (meta tag): scripts, styles, data and images may load only from the site itself; no forms, frames or plugins
 
 ## Repository structure
 
@@ -33,6 +35,8 @@ It is a static site: HTML, CSS and vanilla JavaScript, with no build step, backe
 ├── index.html          Page structure and section containers
 ├── styles.css          Design tokens (light/dark), layout, components
 ├── app.js              Data loading, statistics, filters, rendering
+├── assets/
+│   └── theme-init.js   Applies the saved light/dark theme before first paint
 ├── README.md
 └── data/
     ├── projects.json          Portfolio data incl. milestones (source of truth for the UI)
@@ -99,6 +103,10 @@ Timing labels, durations, the years each project spans, milestone positions and 
 ### Updating the data
 
 Edit `data/projects.json` or `data/portfolio-status.json` and commit. KPIs, filter options, the roadmap, milestones and the status summary are regenerated from the files. If you add a new domain, also add it to `transformationAreas` so it gets a domain colour.
+
+## Security
+
+The dashboard is a read-only static page. It has no login, forms, password fields, redirects, pop-ups, iframes, cookies, analytics or external API calls. Every resource (HTML, CSS, JavaScript, JSON) is loaded from the site's own origin, which the Content Security Policy in `index.html` enforces. The only browser storage used is `localStorage`, which holds the light/dark theme choice.
 
 ## Licence
 
