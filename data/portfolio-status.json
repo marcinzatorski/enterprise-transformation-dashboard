@@ -1,0 +1,31 @@
+{
+  "reportingPeriod": "September 2026",
+  "note": "Illustrative programme status content aligned to project RAG status and commentary in projects.json. projectIds link items to projects so the summary follows the dashboard filters; items without projectIds are programme-wide.",
+  "highlights": [
+    { "text": "ServiceNow to Jira Service Management migration on track for the October 2026 cutover; configuration complete.", "projectIds": [6] },
+    { "text": "Identity workstreams mobilised: SailPoint ISC and CyberArk cloud designs progressing to plan.", "projectIds": [1, 2] },
+    { "text": "SIEM replacement (Phase I) and SOAR automation (Phase II) aligned under a single roadmap.", "projectIds": [3] }
+  ],
+  "lowlights": [
+    { "text": "New Call Centre Onboarding is Red: vendor delay in office fit-out is holding up premises readiness.", "projectIds": [15], "rag": "Red" },
+    { "text": "AD to Entra ID Phase I sequencing affected by legacy application dependencies and hybrid identity complexity.", "projectIds": [4], "rag": "Amber" },
+    { "text": "CRM integration complexity and market rollout dependencies under active review.", "projectIds": [14], "rag": "Amber" }
+  ],
+  "risksIssues": [
+    { "type": "Issue", "rag": "Red", "text": "Call centre premises fit-out delayed by vendor, impacting infrastructure installation, workplace readiness and the onboarding schedule.", "projectIds": [15] },
+    { "type": "Risk", "rag": "Amber", "text": "Legacy AD dependencies could push Entra ID Phase I completion beyond December 2027.", "projectIds": [4] },
+    { "type": "Risk", "rag": "Amber", "text": "Firewall rule complexity and site-specific dependencies may delay full network segmentation.", "projectIds": [5] },
+    { "type": "Risk", "rag": "Amber", "text": "CRM market rollout dependencies could compress the 2028 rollout window.", "projectIds": [14] }
+  ],
+  "nextSteps": [
+    { "text": "Agree recovery plan and revised fit-out dates with the call centre premises vendor.", "projectIds": [15] },
+    { "text": "Complete Jira SM UAT sign-off and confirm cutover readiness for 30 October.", "projectIds": [6] },
+    { "text": "Present SailPoint ISC target design to the design authority (October 2026).", "projectIds": [1] },
+    { "text": "Finish the hybrid identity dependency assessment and re-baseline migration waves.", "projectIds": [4] }
+  ],
+  "decisionsNeeded": [
+    { "text": "Approve the call centre re-plan and an interim workplace option if fit-out slips further.", "projectIds": [15] },
+    { "text": "Confirm SIEM platform selection to protect the Phase I timeline (November 2026).", "projectIds": [3] },
+    { "text": "Endorse CRM pilot market choice and SAP E1 integration sequencing.", "projectIds": [14] }
+  ]
+}
