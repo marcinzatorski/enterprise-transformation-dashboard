@@ -261,8 +261,9 @@
     return { t0, t1, pos: ms => ((Math.min(Math.max(ms, t0), t1) - t0) / (t1 - t0)) * 100 };
   }
 
+  /** Milestone colour always follows the project RAG; go-live and at-risk only change size / outline. */
   function milestoneClasses(p, m) {
-    return [m.type === 'go-live' ? 'go-live' : '', m.status === 'at-risk' ? `at-risk ${ragKey(p.rag)}` : ''].join(' ').trim();
+    return [`ms-${ragKey(p.rag)}`, m.type === 'go-live' ? 'go-live' : '', m.status === 'at-risk' ? 'at-risk' : ''].join(' ').trim();
   }
 
   function renderRoadmap(list) {
@@ -306,7 +307,7 @@
             <span class="rm-text"><span class="rm-name">${esc(p.projectName)}</span><span class="rm-meta">${domainChip(p)}<span class="rm-timing">${esc(p._timing)}</span></span></span>
           </div>
           <div class="rm-track" role="cell">${gridlines}${todayLine}
-            <span class="rm-bar ${ragKey(p.rag)}" style="left:${left}%;width:${width}%" data-tip="bar" data-pid="${p.id}"></span>
+            <span class="rm-bar rag-fill-${ragKey(p.rag)}" style="left:${left}%;width:${width}%" data-tip="bar" data-pid="${p.id}"></span>
             ${markers}
           </div>
         </div>`;
@@ -425,6 +426,7 @@
     const drawer = $('#drawer');
     drawer.style.setProperty('--d-rag', `var(--rag-${ragKey(p.rag)})`);
     drawer.style.setProperty('--d-rag-soft', `var(--rag-${ragKey(p.rag)}-soft)`);
+    drawer.style.setProperty('--d-rag-border', `var(--rag-${ragKey(p.rag)}-border)`);
 
     $('#d-kicker').innerHTML = `Project ${p.id} · ${domainChip(p)} · ${ragPill(p.rag)}`;
     $('#d-title').textContent = p.projectName;
