@@ -1,0 +1,275 @@
+{
+  "meta": {"title": "Enterprise Transformation Portfolio", "programmeStart": "2026-07-01", "programmeEnd": "2028-12-31", "lastUpdated": "2026-09-25", "source": "IT_Transformation_Programme_Portfolio.xlsx (Portfolio Data sheet). Milestones are illustrative demonstration data."},
+  "projects": [
+    {
+      "id": 1,
+      "name": "Identity Governance Cloud Transformation",
+      "domain": "Identity & Access",
+      "startDate": "2026-07-01",
+      "endDate": "2027-06-30",
+      "rag": "Green",
+      "scope": "Migrate IGA to a cloud operating model, strengthen identity lifecycle management, integrations, governance and access reviews.",
+      "platforms": ["SailPoint ISC", "Entra ID", "SAP E1", "REST API"],
+      "keywords": ["IAM", "IGA", "RBAC", "Joiner-Mover-Leaver", "Access Reviews"],
+      "frameworks": ["NIS2"],
+      "ragCommentary": "On track against the current baseline; no material delivery issues reported.",
+      "milestones": [
+        {"name": "IGA Cloud Tenant Configured", "date": "2026-09-30", "type": "standard", "description": "SailPoint ISC tenant and Entra ID / SAP E1 connectors configured in non-production."},
+        {"name": "Joiner-Mover-Leaver Automation Live", "date": "2027-01-29", "type": "standard", "description": "Identity lifecycle workflows automated through REST API integrations."},
+        {"name": "First Cloud Access Review Campaign", "date": "2027-06-11", "type": "go-live", "description": "RBAC-based access review campaign run on the cloud IGA platform; legacy IGA retirement approved."}
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Privileged Access Management Cloud Transformation",
+      "domain": "Identity & Access",
+      "startDate": "2026-10-01",
+      "endDate": "2027-09-30",
+      "rag": "Green",
+      "scope": "Transform PAM to a cloud operating model, including JIT privileged access, session control and secrets management.",
+      "platforms": ["CyberArk", "Entra ID"],
+      "keywords": ["PAM", "JIT", "PIM", "Privileged Sessions", "Secrets Management", "MFA", "Zero Trust"],
+      "frameworks": ["NIST CSF 2.0"],
+      "ragCommentary": "On track against the current baseline; no material delivery issues reported.",
+      "milestones": [
+        {"name": "PAM Target Architecture Approved", "date": "2026-11-27", "type": "standard", "description": "CyberArk cloud design, including JIT and Entra PIM integration, approved by the design authority."},
+        {"name": "JIT Privileged Access Pilot", "date": "2027-04-16", "type": "standard", "description": "Just-in-time elevation and privileged session recording piloted with Tier 0 administrators."},
+        {"name": "Privileged Accounts Onboarded", "date": "2027-09-10", "type": "go-live", "description": "In-scope privileged accounts and secrets vaulted, with MFA enforced for all privileged sessions."}
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Enterprise SIEM & Security Operations Transformation",
+      "domain": "Cyber Security",
+      "startDate": "2026-07-01",
+      "endDate": "2027-12-31",
+      "rag": "Green",
+      "scope": "Phase I: replace the enterprise SIEM. Phase II: introduce security automation, response orchestration and enhanced detection use cases.",
+      "platforms": ["SIEM", "SOAR", "SOC tooling", "APIs"],
+      "keywords": ["Log Management", "Detection Engineering", "Security Analytics", "Incident Response", "MITRE ATT&CK"],
+      "frameworks": ["NIST CSF 2.0"],
+      "ragCommentary": "On track. Phase I platform replacement and Phase II automation are aligned under a single transformation roadmap.",
+      "milestones": [
+        {"name": "SIEM Platform Selected & Log Sources Mapped", "date": "2026-11-13", "type": "standard", "description": "Replacement SIEM selected; priority log sources and ingestion approach agreed."},
+        {"name": "Phase I SIEM Cutover", "date": "2027-05-28", "type": "go-live", "description": "Legacy SIEM retired; detection content migrated and mapped to MITRE ATT&CK."},
+        {"name": "SOAR Playbooks in Production", "date": "2027-11-26", "type": "standard", "description": "Phase II response orchestration live for priority incident response use cases."}
+      ]
+    },
+    {
+      "id": 4,
+      "name": "Enterprise Directory Transformation – AD to Entra ID, Phase I",
+      "domain": "Infrastructure & Identity",
+      "startDate": "2026-07-01",
+      "endDate": "2027-12-31",
+      "rag": "Amber",
+      "scope": "Deliver Phase I of the transformation from traditional Active Directory towards a cloud identity model and reduce dependency on on-premises directory services.",
+      "platforms": ["Active Directory", "Entra ID", "Entra PIM"],
+      "keywords": ["Conditional Access", "MFA", "FIDO2", "Group Policy", "Hybrid Identity", "Zero Trust"],
+      "frameworks": ["NIS2", "NIST CSF 2.0"],
+      "ragCommentary": "Legacy application dependencies and hybrid identity complexity are affecting migration sequencing; remediation plan is in progress.",
+      "milestones": [
+        {"name": "Hybrid Identity Assessment Complete", "date": "2026-10-30", "type": "standard", "description": "Active Directory dependencies, Group Policy estate and hybrid identity flows inventoried."},
+        {"name": "Legacy Application Remediation – Wave 1", "date": "2027-04-30", "type": "at-risk", "description": "First wave of AD-dependent applications remediated; sequencing affected by legacy dependencies."},
+        {"name": "Phase I Cloud Identity Cutover", "date": "2027-12-10", "type": "go-live", "description": "Conditional Access, MFA and FIDO2 enforced for Phase I user populations on Entra ID."}
+      ]
+    },
+    {
+      "id": 5,
+      "name": "Global Network Segmentation & Firewall Transformation",
+      "domain": "Network & Infrastructure",
+      "startDate": "2027-01-01",
+      "endDate": "2028-06-30",
+      "rag": "Amber",
+      "scope": "Segment the enterprise network, redesign security zones, rationalise firewall policies and reduce legacy network dependencies.",
+      "platforms": ["Enterprise Firewalls", "LAN/WAN"],
+      "keywords": ["Network Segmentation", "VLAN", "SD-WAN", "NAC", "TCP/IP", "Routing", "Firewall Policy", "Zero Trust"],
+      "frameworks": ["NIST CSF 2.0"],
+      "ragCommentary": "Firewall rule complexity and site-specific dependencies require additional remediation before full segmentation can be completed.",
+      "milestones": [
+        {"name": "Security Zone Design Approved", "date": "2027-03-31", "type": "standard", "description": "Target security zones, VLAN model and segmentation principles approved."},
+        {"name": "Firewall Policy Rationalisation", "date": "2027-10-29", "type": "at-risk", "description": "Legacy firewall rules rationalised; site-specific dependencies require additional remediation."},
+        {"name": "Segmentation Complete at Strategic Sites", "date": "2028-06-16", "type": "go-live", "description": "Segmented zones and NAC enforced at strategic sites; legacy flat networks retired."}
+      ]
+    },
+    {
+      "id": 6,
+      "name": "IT Service Management Platform Transformation – ServiceNow to Jira SM",
+      "domain": "IT Service Management",
+      "startDate": "2026-07-01",
+      "endDate": "2026-10-31",
+      "rag": "Green",
+      "scope": "Migrate core ITSM capabilities from ServiceNow to Jira Service Management, covering Incident, Request, Change, Knowledge and Service Catalogue.",
+      "platforms": ["Jira Service Management", "Jira Assets", "ServiceNow"],
+      "keywords": ["ITIL", "CMDB", "Service Catalogue", "Incident Management", "Change Management", "Knowledge Base", "Automation"],
+      "frameworks": ["ITIL"],
+      "ragCommentary": "On track. Core process migration and service catalogue transition remain within the planned four-month delivery window.",
+      "milestones": [
+        {"name": "Service Catalogue Mapped to Jira SM", "date": "2026-08-14", "type": "standard", "description": "ServiceNow catalogue items, request types and SLAs mapped to Jira Service Management."},
+        {"name": "CMDB Migrated to Jira Assets", "date": "2026-09-25", "type": "standard", "description": "Configuration items migrated from ServiceNow and reconciled in Jira Assets; UAT signed off."},
+        {"name": "Jira Service Management Go-Live", "date": "2026-10-26", "type": "go-live", "description": "Incident, Request, Change and Knowledge live on Jira SM; ServiceNow set to read-only."}
+      ]
+    },
+    {
+      "id": 7,
+      "name": "Enterprise Endpoint Protection & EDR Consolidation",
+      "domain": "Endpoint & Workplace",
+      "startDate": "2027-04-01",
+      "endDate": "2027-12-31",
+      "rag": "Green",
+      "scope": "Consolidate endpoint protection and EDR/XDR capabilities, improve hardening standards and retire legacy endpoint agents.",
+      "platforms": ["Microsoft Defender", "Microsoft Intune", "Windows"],
+      "keywords": ["EDR", "XDR", "Endpoint Security", "Hardening", "Device Compliance", "Vulnerability Management"],
+      "frameworks": ["NIST CSF 2.0"],
+      "ragCommentary": "On track against the current baseline; no material delivery issues reported.",
+      "milestones": [
+        {"name": "Defender for Endpoint Pilot", "date": "2027-05-28", "type": "standard", "description": "EDR/XDR pilot completed across representative Windows device groups."},
+        {"name": "Intune Hardening Baselines Enforced", "date": "2027-09-17", "type": "standard", "description": "Device compliance and hardening baselines enforced through Microsoft Intune."},
+        {"name": "Legacy Endpoint Agents Retired", "date": "2027-12-03", "type": "go-live", "description": "Consolidated Defender stack in production; legacy endpoint agents removed."}
+      ]
+    },
+    {
+      "id": 8,
+      "name": "Cloud Security Posture & Guardrails Implementation",
+      "domain": "Cloud & Security",
+      "startDate": "2027-01-01",
+      "endDate": "2027-12-31",
+      "rag": "Green",
+      "scope": "Implement cloud security baselines, automated guardrails, posture management and compliance monitoring across strategic cloud platforms.",
+      "platforms": ["Azure", "AWS", "Terraform"],
+      "keywords": ["CSPM", "CNAPP", "Cloud Security", "Policy as Code", "IAM", "Automated Guardrails"],
+      "frameworks": ["NIS2", "ISO 27001"],
+      "ragCommentary": "On track against the current baseline; no material delivery issues reported.",
+      "milestones": [
+        {"name": "Cloud Security Baseline Approved", "date": "2027-03-12", "type": "standard", "description": "Security baselines for Azure and AWS approved against NIS2 and ISO 27001 controls."},
+        {"name": "Policy-as-Code Guardrails Deployed", "date": "2027-07-30", "type": "standard", "description": "Automated preventive guardrails deployed through Terraform pipelines."},
+        {"name": "CSPM Compliance Monitoring Live", "date": "2027-11-19", "type": "go-live", "description": "Posture management and continuous compliance monitoring live across strategic cloud platforms."}
+      ]
+    },
+    {
+      "id": 9,
+      "name": "Enterprise Access Certification & Application Governance",
+      "domain": "Identity & Governance",
+      "startDate": "2027-07-01",
+      "endDate": "2028-06-30",
+      "rag": "Green",
+      "scope": "Standardise application ownership, access certification, role models, segregation-of-duties controls and recurring access reviews.",
+      "platforms": ["SailPoint", "SAP E1"],
+      "keywords": ["IAM", "Access Governance", "RBAC", "SoD", "Recertification", "Application Ownership", "Audit"],
+      "frameworks": ["NIS2", "ISO 27001"],
+      "ragCommentary": "On track against the current baseline; no material delivery issues reported.",
+      "milestones": [
+        {"name": "Application Ownership Register Complete", "date": "2027-09-30", "type": "standard", "description": "Business and technical owners confirmed for all in-scope applications."},
+        {"name": "SoD Rule Set Implemented", "date": "2028-01-28", "type": "standard", "description": "Segregation-of-duties rules for SAP E1 and key applications implemented in SailPoint."},
+        {"name": "First Enterprise Recertification Cycle", "date": "2028-05-26", "type": "go-live", "description": "Enterprise-wide access recertification completed with audit evidence retained."}
+      ]
+    },
+    {
+      "id": 10,
+      "name": "Zero Trust Access Transformation with Zscaler",
+      "domain": "Network & Security",
+      "startDate": "2027-10-01",
+      "endDate": "2028-06-30",
+      "rag": "Green",
+      "scope": "Transform remote, administrative and third-party access towards identity-aware Zero Trust access and reduce reliance on traditional VPN.",
+      "platforms": ["Zscaler ZPA", "Zscaler ZIA", "Entra ID"],
+      "keywords": ["Zero Trust", "VPN Replacement", "Device Posture", "Conditional Access", "MFA", "Third-Party Access"],
+      "frameworks": ["NIST CSF 2.0"],
+      "ragCommentary": "On track against the current baseline; no material delivery issues reported.",
+      "milestones": [
+        {"name": "ZPA Pilot for Administrative Access", "date": "2027-12-17", "type": "standard", "description": "Zscaler Private Access piloted for administrative access with device posture checks."},
+        {"name": "Third-Party Access Migrated", "date": "2028-03-31", "type": "standard", "description": "Supplier and third-party access moved to identity-aware Zero Trust access policies."},
+        {"name": "VPN Retired for Remote Users", "date": "2028-06-09", "type": "go-live", "description": "Remote user access served through ZPA/ZIA; traditional VPN decommissioned."}
+      ]
+    },
+    {
+      "id": 11,
+      "name": "Machine Identity & Secrets Management – Discovery and Phase I",
+      "domain": "Identity & Security",
+      "startDate": "2028-01-01",
+      "endDate": "2028-09-30",
+      "rag": "Green",
+      "scope": "Perform enterprise discovery of service accounts, API keys and certificates, followed by Phase I onboarding and automated secrets rotation.",
+      "platforms": ["CyberArk", "PKI"],
+      "keywords": ["Service Accounts", "API Keys", "Certificates", "Secrets Management", "Vaulting", "Rotation", "Machine Identity", "Discovery"],
+      "frameworks": ["NIST CSF 2.0"],
+      "ragCommentary": "On track. Discovery scope is defined and Phase I onboarding criteria are being prepared.",
+      "milestones": [
+        {"name": "Machine Identity Discovery Complete", "date": "2028-03-17", "type": "standard", "description": "Service accounts, API keys and certificates discovered and ownership assigned."},
+        {"name": "Phase I Vault Onboarding", "date": "2028-06-30", "type": "standard", "description": "Priority service accounts and secrets onboarded to CyberArk vaulting."},
+        {"name": "Automated Secrets Rotation Live", "date": "2028-09-15", "type": "go-live", "description": "Automated rotation in place for Phase I secrets and PKI certificates."}
+      ]
+    },
+    {
+      "id": 12,
+      "name": "Global IT Operating Model & Process Transformation",
+      "domain": "Operating Model & Process",
+      "startDate": "2027-01-01",
+      "endDate": "2027-12-31",
+      "rag": "Green",
+      "scope": "Standardise global IT processes, ownership, governance, RACI, KPI, escalation models and the global/local operating model.",
+      "platforms": ["Jira", "Jira Service Management"],
+      "keywords": ["ITIL", "Operating Model", "RACI", "Process Design", "Governance", "KPI", "SLA", "Continual Improvement"],
+      "frameworks": ["ITIL"],
+      "ragCommentary": "On track. Target operating model and process ownership principles are progressing to plan.",
+      "milestones": [
+        {"name": "Target Operating Model Approved", "date": "2027-03-26", "type": "standard", "description": "Global/local operating model, RACI and governance forums approved."},
+        {"name": "KPI & SLA Framework Baselined", "date": "2027-07-16", "type": "standard", "description": "Process KPIs, SLAs and escalation model baselined in Jira Service Management."},
+        {"name": "Global Operating Model Live", "date": "2027-11-30", "type": "go-live", "description": "Global process ownership and continual improvement cycle operating across regions."}
+      ]
+    },
+    {
+      "id": 13,
+      "name": "Enterprise Data & Analytics Platform Transformation",
+      "domain": "Data & Analytics",
+      "startDate": "2028-01-01",
+      "endDate": "2028-12-31",
+      "rag": "Green",
+      "scope": "Modernise the enterprise data platform, standardise data models, consolidate reporting and migrate legacy analytics to a modern architecture.",
+      "platforms": ["Snowflake", "SQL", "Power BI", "SAP E1", "REST API"],
+      "keywords": ["ETL/ELT", "Semantic Layer", "Data Catalogue", "Data Governance", "Reporting", "Analytics"],
+      "frameworks": ["Data Governance", "ISO 27001"],
+      "ragCommentary": "On track. Target data architecture and migration waves are aligned with the planned 2028 transformation roadmap.",
+      "milestones": [
+        {"name": "Target Data Architecture Signed Off", "date": "2028-03-31", "type": "standard", "description": "Snowflake-based target architecture and migration waves signed off."},
+        {"name": "Semantic Layer & Data Catalogue Live", "date": "2028-08-25", "type": "standard", "description": "Standard data models, semantic layer and data catalogue available to reporting teams."},
+        {"name": "Legacy Analytics Migrated", "date": "2028-12-08", "type": "go-live", "description": "Legacy reports consolidated into Power BI on the modern data platform."}
+      ]
+    },
+    {
+      "id": 14,
+      "name": "Global CRM & Customer Experience Platform Transformation",
+      "domain": "Business Applications",
+      "startDate": "2027-04-01",
+      "endDate": "2028-12-31",
+      "rag": "Amber",
+      "scope": "Transform the CRM and customer experience platform, integrate customer data, modernise the frontend and deliver a phased market rollout.",
+      "platforms": ["CRM Platform", "SAP E1", "REST API", "Cloud"],
+      "keywords": ["Customer Experience", "Data Integration", "Frontend", "UX", "Customer Data", "Market Rollout"],
+      "frameworks": ["Data Privacy", "ISO 27001"],
+      "ragCommentary": "CRM integration complexity and market rollout dependencies are under active review; delivery remains recoverable within the programme window.",
+      "milestones": [
+        {"name": "CRM Solution Design & Integration Blueprint", "date": "2027-07-30", "type": "standard", "description": "Target CRM design and SAP E1 / REST API integration blueprint approved."},
+        {"name": "Customer Data Integration Complete", "date": "2028-02-25", "type": "at-risk", "description": "Customer data integration under review due to CRM integration complexity."},
+        {"name": "Phased Market Rollout Complete", "date": "2028-11-24", "type": "go-live", "description": "CRM and modernised frontend rolled out to all planned markets."}
+      ]
+    },
+    {
+      "id": 15,
+      "name": "New Call Centre Onboarding & Operational Readiness",
+      "domain": "Business Operations",
+      "startDate": "2026-09-01",
+      "endDate": "2027-04-30",
+      "rag": "Red",
+      "scope": "Onboard a new call centre, covering office readiness, IT infrastructure, telephony/contact-centre capabilities, workplaces, CRM access, training and cutover.",
+      "platforms": ["CCaaS", "Telephony", "IVR", "CRM", "LAN/WAN", "End User Computing"],
+      "keywords": ["Contact Centre", "Workforce Management", "Vendor Management", "Business Readiness", "Cutover", "Operational Readiness"],
+      "frameworks": ["Business Continuity", "IT Service Continuity"],
+      "ragCommentary": "Vendor delay in office fit-out and preparation of the call centre premises is impacting infrastructure installation, workplace readiness and planned onboarding dates.",
+      "milestones": [
+        {"name": "Premises Handover from Fit-out Vendor", "date": "2026-11-20", "type": "at-risk", "description": "Handover of call centre premises delayed by the fit-out vendor; recovery plan requested."},
+        {"name": "Infrastructure & Telephony Installed", "date": "2027-02-12", "type": "at-risk", "description": "LAN/WAN, workplaces, CCaaS telephony and IVR installation dependent on premises readiness."},
+        {"name": "Agent Onboarding & Cutover", "date": "2027-04-16", "type": "go-live", "description": "Agents trained with CRM access; operational cutover to the new call centre."}
+      ]
+    }
+  ]
+}
