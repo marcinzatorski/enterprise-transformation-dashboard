@@ -1,0 +1,30 @@
+{
+  "reportingPeriod": "September 2026",
+  "highlights": [
+    { "text": "ServiceNow to Jira Service Management migration on track for the 26 October 2026 go-live; CMDB migrated to Jira Assets and UAT signed off.", "projectIds": [6] },
+    { "text": "Identity workstreams mobilised: SailPoint ISC tenant configuration and CyberArk cloud design progressing to plan.", "projectIds": [1, 2] },
+    { "text": "SIEM replacement (Phase I) and SOAR automation (Phase II) aligned under a single roadmap.", "projectIds": [3] }
+  ],
+  "lowlights": [
+    { "rag": "Red", "text": "New Call Centre Onboarding is Red: vendor delay in office fit-out is holding up premises readiness.", "projectIds": [15] },
+    { "text": "AD to Entra ID Phase I sequencing affected by legacy application dependencies and hybrid identity complexity.", "projectIds": [4] },
+    { "text": "CRM integration complexity and market rollout dependencies under active review.", "projectIds": [14] }
+  ],
+  "risksIssues": [
+    { "type": "Issue", "rag": "Red", "text": "Vendor delay in office fit-out and preparation of the call centre premises is impacting infrastructure installation, workplace readiness and planned onboarding dates.", "projectIds": [15] },
+    { "type": "Risk", "rag": "Amber", "text": "Legacy AD dependencies could push the Phase I Entra ID cutover beyond December 2027.", "projectIds": [4] },
+    { "type": "Risk", "rag": "Amber", "text": "Firewall rule complexity and site-specific dependencies may delay full network segmentation.", "projectIds": [5] },
+    { "type": "Risk", "rag": "Amber", "text": "CRM market rollout dependencies could compress the 2028 rollout window.", "projectIds": [14] }
+  ],
+  "nextSteps": [
+    { "text": "Agree a recovery plan and revised handover date with the fit-out vendor.", "projectIds": [15] },
+    { "text": "Complete the Jira SM cutover rehearsal and confirm go-live readiness for 26 October.", "projectIds": [6] },
+    { "text": "Present the PAM target architecture to the design authority (November 2026).", "projectIds": [2] },
+    { "text": "Complete the hybrid identity assessment and plan remediation Wave 1.", "projectIds": [4] }
+  ],
+  "decisionsNeeded": [
+    { "text": "Approve the call centre re-plan and an interim workplace option if the fit-out slips further.", "projectIds": [15] },
+    { "text": "Confirm SIEM platform selection by 13 November 2026 to protect the Phase I timeline.", "projectIds": [3] },
+    { "text": "Endorse the CRM pilot market and SAP E1 integration sequencing.", "projectIds": [14] }
+  ]
+}
