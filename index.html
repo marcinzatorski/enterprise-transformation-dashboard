@@ -3,9 +3,136 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Test</title>
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'">
+  <meta name="referrer" content="no-referrer">
+  <title>Enterprise Transformation Portfolio</title>
+  <meta name="description" content="Interactive enterprise transformation portfolio dashboard showing programme roadmap, delivery status, milestones and project details.">
+  <link rel="stylesheet" href="styles.css">
+  <script src="app.js"></script>
 </head>
 <body>
-  TEST
+  <header class="page-header">
+    <div class="header-inner">
+      <div class="header-title">
+        <p class="eyebrow">Programme Delivery &amp; Transformation Overview</p>
+        <h1>Enterprise Transformation Portfolio</h1>
+        <p class="header-meta">Programme period <strong>July 2026 – December 2028</strong><span class="dot" aria-hidden="true">·</span>Last updated <span id="last-updated">25 Sep 2026</span></p>
+      </div>
+      <div class="header-actions">
+        <button type="button" class="btn" id="reset-filters">Reset filters</button>
+        <button type="button" class="theme-switch" id="theme-toggle" aria-pressed="false" aria-label="Dark mode" title="Switch light / dark mode">
+          <span class="theme-icon sun" aria-hidden="true"></span>
+          <span class="theme-icon moon" aria-hidden="true"></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="page">
+    <section class="card filter-bar" aria-label="Filters">
+      <div class="field field-search">
+        <label for="filter-search">Search</label>
+        <input type="search" id="filter-search" placeholder="Project, keyword, platform..." autocomplete="off" spellcheck="false">
+      </div>
+      <div class="field">
+        <label for="filter-rag">RAG</label>
+        <select id="filter-rag"><option value="">All</option></select>
+      </div>
+      <div class="field">
+        <label for="filter-domain">Domain</label>
+        <select id="filter-domain"><option value="">All domains</option></select>
+      </div>
+      <div class="field">
+        <label for="filter-year">Year</label>
+        <select id="filter-year"><option value="">All years</option></select>
+      </div>
+      <div class="field">
+        <label for="filter-platform">Technology / Platform</label>
+        <select id="filter-platform"><option value="">All platforms</option></select>
+      </div>
+      <div class="field">
+        <label for="filter-framework">Framework</label>
+        <select id="filter-framework"><option value="">All frameworks</option></select>
+      </div>
+      <p class="filter-result" id="filter-result" aria-live="polite"></p>
+    </section>
+
+    <section class="kpi-row" id="kpis" aria-label="Portfolio KPIs"></section>
+
+    <section class="card section accent-blue" aria-labelledby="roadmap-title">
+      <div class="section-head">
+        <div>
+          <h2 id="roadmap-title">Portfolio Roadmap</h2>
+          <p class="section-sub">Project timelines and key milestones · hover or focus a marker for detail</p>
+        </div>
+        <ul class="legend" aria-label="Legend">
+          <li><span class="lg-bar rag-green"></span>Green – on track</li>
+          <li><span class="lg-bar rag-amber"></span>Amber – attention required</li>
+          <li><span class="lg-bar rag-red"></span>Red – critical</li>
+          <li><span class="lg-ms"></span>Milestone (project RAG colour)</li>
+          <li><span class="lg-ms golive"></span>Go-live</li>
+          <li><span class="lg-ms atrisk"></span>At risk</li>
+          <li><span class="lg-today"></span>Today</li>
+        </ul>
+      </div>
+      <div class="roadmap-scroll">
+        <div class="roadmap" id="roadmap"></div>
+      </div>
+    </section>
+
+    <section class="card section accent-violet" aria-labelledby="status-title">
+      <div class="section-head">
+        <div>
+          <h2 id="status-title">Programme Status Summary</h2>
+          <p class="section-sub" id="status-sub">Reporting period</p>
+        </div>
+      </div>
+      <div class="status-grid" id="status"></div>
+    </section>
+
+    <section class="card section accent-teal" aria-labelledby="portfolio-title">
+      <div class="section-head">
+        <div>
+          <h2 id="portfolio-title">Project Portfolio</h2>
+          <p class="section-sub">Select a project for its status report</p>
+        </div>
+      </div>
+      <div class="table-scroll">
+        <table class="portfolio-table" id="portfolio">
+          <thead>
+            <tr>
+              <th scope="col" aria-sort="ascending"><button type="button" class="sort-btn" data-sort="id">#<span class="sort-ind" aria-hidden="true"></span></button></th>
+              <th scope="col"><button type="button" class="sort-btn" data-sort="name">Project<span class="sort-ind" aria-hidden="true"></span></button></th>
+              <th scope="col"><button type="button" class="sort-btn" data-sort="domain">Domain<span class="sort-ind" aria-hidden="true"></span></button></th>
+              <th scope="col"><button type="button" class="sort-btn" data-sort="rag">RAG<span class="sort-ind" aria-hidden="true"></span></button></th>
+              <th scope="col"><button type="button" class="sort-btn" data-sort="start">Timing<span class="sort-ind" aria-hidden="true"></span></button></th>
+              <th scope="col">Scope</th>
+              <th scope="col">Technology / Platforms</th>
+              <th scope="col">Technical Keywords</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    <p class="load-error" id="load-error" hidden>Portfolio data could not be loaded. Serve the folder over HTTP (for example GitHub Pages) instead of opening the file directly.</p>
+
+    <footer class="page-footer">Portfolio demo · Static site · No login or personal data collection</footer>
+  </main>
+
+  <div class="drawer-backdrop" id="drawer-backdrop" hidden></div>
+  <aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-labelledby="drawer-title" hidden>
+    <div class="drawer-head">
+      <div class="drawer-head-text">
+        <div class="drawer-tags" id="drawer-tags"></div>
+        <h2 class="drawer-title" id="drawer-title"></h2>
+      </div>
+      <button type="button" class="btn-icon" id="drawer-close" aria-label="Close project details">×</button>
+    </div>
+    <div class="drawer-body" id="drawer-body"></div>
+  </aside>
+
+  <div class="tooltip" id="tooltip" role="tooltip" hidden></div>
 </body>
 </html>
